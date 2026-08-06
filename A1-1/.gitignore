@@ -13,3 +13,7 @@ env/
 # OS files
 .DS_Store
 Thumbs.db
+
+# 개인 학습용 과제 안내 문서는 저장소에 포함하지 않습니다.
+subject.md
+sub.md

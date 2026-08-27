@@ -48,12 +48,14 @@ $env:KAKAO_REST_API_KEY="YOUR_KAKAO_REST_API_KEY"
 `A1-2` 폴더에서 다음 명령을 실행합니다.
 
 ```powershell
+cd A1-2
 python travel_planner.py --date "2026-09-15"
 ```
 
 잘못된 날짜를 입력하면 사용법이 출력됩니다.
 
 ```powershell
+cd A1-2
 python travel_planner.py --date "2026-02-30"
 ```
 

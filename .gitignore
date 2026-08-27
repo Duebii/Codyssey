@@ -1,0 +1,14 @@
+# Local assignment brief
+subject.md
+
+# Python cache and virtual environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local prompt data
+prompts.json
+
+# API keys
+.env

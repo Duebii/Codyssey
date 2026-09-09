@@ -1,0 +1,3 @@
+# Runtime: Python 3.12 standard library only.
+# http.server, urllib.request, json, os, logging, socket and uuid are bundled with Python.
+# No third-party packages or frontend build step are required.

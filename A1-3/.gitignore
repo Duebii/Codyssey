@@ -1,0 +1,11 @@
+.env
+.env.*
+!.env.example
+.vercel/
+.venv/
+__pycache__/
+*.py[cod]
+node_modules/
+*.log
+.tmp/
+test-results/

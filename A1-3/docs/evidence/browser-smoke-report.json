@@ -1,0 +1,103 @@
+{
+  "checkedAt": "2026-09-09T11:15:11.570Z",
+  "actualAI": false,
+  "checks": [
+    {
+      "name": "Home → About → Personal navigation and browser Back",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Layout 1440×900",
+      "passed": true,
+      "detail": "5 screens; no horizontal overflow"
+    },
+    {
+      "name": "Layout 390×844",
+      "passed": true,
+      "detail": "5 screens; no horizontal overflow"
+    },
+    {
+      "name": "Layout 768×1024",
+      "passed": true,
+      "detail": "5 screens; no horizontal overflow"
+    },
+    {
+      "name": "Layout 320×740",
+      "passed": true,
+      "detail": "5 screens; no horizontal overflow"
+    },
+    {
+      "name": "Empty input prevents API request",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Actual local API: missing key gives safe notice and retry, no fake result",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "UI test-only fixtures: HTTP 500/429 and invalid recommendations rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "UI test-only clock: loading, duplicate-click prevention and 25s timeout",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "UI test-only fixture: recommendation selects matching course without autoplay",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "Real MP3 focus",
+      "passed": true,
+      "detail": "play, pause, resume, stop on navigation; 336.04s source"
+    },
+    {
+      "name": "Real MP3 sleep",
+      "passed": true,
+      "detail": "play, pause, resume, stop on navigation; 204.74s source"
+    },
+    {
+      "name": "Real MP3 relax",
+      "passed": true,
+      "detail": "play, pause, resume, stop on navigation; 63.03s source"
+    },
+    {
+      "name": "Mute, volume, and restart from beginning",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "name": "No uncaught browser JavaScript errors",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "audio": {
+    "focus": {
+      "source": "audio/focus.mp3",
+      "duration": 336.039156,
+      "readyState": 4,
+      "currentTime": 0.522449
+    },
+    "sleep": {
+      "source": "audio/sleep.mp3",
+      "duration": 204.744,
+      "readyState": 4,
+      "currentTime": 0.530667
+    },
+    "relax": {
+      "source": "audio/relax.mp3",
+      "duration": 63.033469,
+      "readyState": 4,
+      "currentTime": 0.522449
+    }
+  },
+  "errors": [],
+  "status": "passed"
+}

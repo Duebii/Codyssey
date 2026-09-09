@@ -1,0 +1,12 @@
+{
+  "actualAI": false,
+  "checks": [
+    "Keyboard skip link reaches main; hidden skip link does not leak into full-page capture",
+    "Keyboard menu and native radio arrows",
+    "Breath circle changes during playback and respects reduced motion; no Vercel CSP violations",
+    "Local server blocks source, environment, docs, traversal, and API source files",
+    "Leaving Care cancels a pending request and permits retry on return",
+    "Failed audio freezes the timer, shows guidance, and plays successfully after retry"
+  ],
+  "status": "passed"
+}

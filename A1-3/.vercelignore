@@ -10,9 +10,10 @@ dev_server.py
 README.md
 requirements-dev.txt
 *.log
-focus.mp3
-sleep.mp3
-relax.mp3
+# Exclude root originals only; keep the public audio/ copies deployed.
+/focus.mp3
+/sleep.mp3
+/relax.mp3
 03_course.png
 04_1_relax_ui_mockup.png
 04_2_relax_ui_mockup.png

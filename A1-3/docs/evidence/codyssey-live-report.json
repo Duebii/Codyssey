@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-09-10T06:47:06.509Z",
+  "actualAI": true,
+  "provider": "Codyssey",
+  "endpoint": "https://copa.codyssey.kr/v1/chat/completions",
+  "model": "gpt-5-mini",
+  "status": 200,
+  "result": {
+    "course_id": "relax",
+    "course": "긴장을 푸는 호흡",
+    "reason": "작업을 마치고 잠깐 쉬고 싶은 지금, 일상 속 쌓인 긴장을 부드럽게 풀어주는 3분 호흡 코스입니다. 편안한 자세로 눈을 감거나 시선을 낮추고 자연스러운 호흡에 주의를 기울여 보세요."
+  },
+  "courseNavigationPassed": true
+}

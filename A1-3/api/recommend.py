@@ -1,4 +1,4 @@
-"""POST /api/recommend: validate input, call OpenAI, validate the recommendation.
+"""POST /api/recommend: validate input, call the Codyssey gateway, validate the recommendation.
 
 Uses Python's standard library so the beginner's local setup needs no packages.
 Vercel discovers the BaseHTTPRequestHandler subclass named `handler` in /api.
@@ -22,6 +22,8 @@ COURSES = {
 LIMITS = {"environment": 40, "situation": 300, "need": 150}
 MAX_BODY_BYTES = 4096
 AI_TIMEOUT_SECONDS = 20
+AI_ENDPOINT = "https://copa.codyssey.kr/v1/chat/completions"
+DEFAULT_MODEL = "gpt-5-mini"
 CONNECTION_MESSAGE = "잠시 연결이 고요해졌어요. 조금 뒤 다시 시도해주세요."
 SYSTEM_PROMPT = """You are RE:ST Care, a gentle Korean rest-course recommender.
 Select exactly one existing 3-minute breathing course:
@@ -34,7 +36,8 @@ Write a warm, concise Korean recommendation reason (one or two sentences, at mos
 240 characters) that relates to their inputs. Do not quote personal identifiers.
 Do not diagnose, prescribe, promise health outcomes, or force a breathing pace.
 If the person is driving or moving, invite a break only after stopping safely.
-Return only the specified JSON schema, with course_id and reason.
+Return only a JSON object with exactly two keys: course_id and reason.
+Do not include Markdown fences or any text outside that JSON object.
 """
 
 
@@ -75,24 +78,22 @@ def validate_recommendation(result):
 
 
 def extract_recommendation(response):
-    if not isinstance(response, dict) or response.get("status") != "completed":
+    if not isinstance(response, dict):
         raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
-    text_parts = []
-    output = response.get("output")
-    if not isinstance(output, list):
+    choices = response.get("choices")
+    if not isinstance(choices, list) or len(choices) != 1:
         raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
-    for item in output:
-        if not isinstance(item, dict) or item.get("type") != "message":
-            continue
-        if not isinstance(item.get("content"), list):
-            raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
-        for part in item["content"]:
-            if not isinstance(part, dict) or part.get("type") == "refusal":
-                raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
-            if part.get("type") == "output_text" and isinstance(part.get("text"), str):
-                text_parts.append(part["text"])
+    choice = choices[0]
+    if not isinstance(choice, dict) or choice.get("finish_reason") != "stop":
+        raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
+    message = choice.get("message")
+    if not isinstance(message, dict) or message.get("refusal"):
+        raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
+    content = message.get("content")
+    if not isinstance(content, str):
+        raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE)
     try:
-        return validate_recommendation(json.loads("".join(text_parts)))
+        return validate_recommendation(json.loads(content))
     except (ValueError, TypeError):
         raise APIError(502, "INVALID_AI_RESPONSE", CONNECTION_MESSAGE) from None
 
@@ -101,29 +102,17 @@ def call_ai(inputs):
     api_key = os.environ.get("OPENAI_API_KEY", "").strip()
     if not api_key:
         raise APIError(503, "NOT_CONFIGURED", "RE:ST Care 연결을 준비하고 있어요. 지금은 Personal에서 호흡을 직접 골라주세요.")
+    # Match the gateway's documented OpenAI-compatible Chat Completions example.
+    # Do not assume it implements the direct OpenAI Responses API or JSON Schema.
     request_body = {
-        "model": os.environ.get("OPENAI_MODEL", "").strip() or "gpt-4.1-mini",
-        "store": False,
-        "max_output_tokens": 400,
-        "instructions": SYSTEM_PROMPT,
-        "input": [{"role": "user", "content": json.dumps(inputs, ensure_ascii=False)}],
-        "text": {"format": {
-            "type": "json_schema",
-            "name": "rest_recommendation",
-            "strict": True,
-            "schema": {
-                "type": "object",
-                "properties": {
-                    "course_id": {"type": "string", "enum": list(COURSES)},
-                    "reason": {"type": "string"},
-                },
-                "required": ["course_id", "reason"],
-                "additionalProperties": False,
-            },
-        }},
+        "model": os.environ.get("OPENAI_MODEL", "").strip() or DEFAULT_MODEL,
+        "messages": [
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": json.dumps(inputs, ensure_ascii=False)},
+        ],
     }
     request = urllib.request.Request(
-        "https://api.openai.com/v1/responses",
+        AI_ENDPOINT,
         data=json.dumps(request_body, ensure_ascii=False).encode("utf-8"),
         headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
         method="POST",

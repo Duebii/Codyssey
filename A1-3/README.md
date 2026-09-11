@@ -4,12 +4,35 @@
 
 RE:ST는 숨가쁜 일상 속에서 나에게 필요한 쉼을 발견하고, 3분의 호흡으로 쉬어가는 웹 서비스입니다. 연령·성별·직업에 관계없이 잠깐의 휴식이 필요한 모든 사람을 위한 MVP입니다.
 
-![RE:ST 데스크톱 화면](docs/evidence/desktop-home.png)
+## 주요 화면
+
+### 첫 만남 — Home · 데스크톱
+
+따뜻한 오후 빛을 담은 첫 화면에서 나를 위한 짧은 쉼을 시작합니다.
+
+![데스크톱 Home — 일상 속, 나의 틈과 나의 쉼 시작하기 버튼](docs/evidence/desktop-home.png)
+
+### 내게 맞는 쉼 — RE:ST Care · 데스크톱
+
+현재 환경·상황·필요한 도움을 알려주면, AI가 준비된 세 가지 호흡 중 하나와 추천 이유를 제안합니다. 아래는 **실제 Codyssey AI 응답을 Computer Use로 직접 캡처한 화면**입니다. ‘이 코스로 쉬어가기’를 누르면 추천된 코스가 선택됩니다.
+
+![데스크톱 RE:ST Care — 실제 AI가 추천한 긴장을 푸는 호흡과 추천 이유](docs/evidence/03-ai-result-computer-use.jpg)
+
+### 손안의 3분 — 코스 선택과 호흡 플레이어 · 모바일
+
+원하는 호흡을 직접 고른 뒤, 시작 버튼을 눌러 음악과 호흡 가이드를 따라 쉬어갑니다. 플레이어에서 일시정지·재개와 음량 조절을 할 수 있습니다.
+
+![모바일 Home — 일상 속, 나의 틈과 나의 쉼 시작하기 버튼](docs/evidence/mobile-home.png)
+
+![모바일 호흡 플레이어의 시작 전 화면 — 원형 가이드, 3분 타이머, 재생과 음량 조절](docs/evidence/mobile-breathe.png)
+
+모두 로컬 서비스의 실제 화면입니다. 모바일 이미지는 너비 390px에서 캡처했으며, 플레이어는 시작 전 상태입니다. 전체 캡처와 검증 기록은 [증빙 자료](docs/evidence/README.md)에서 확인할 수 있습니다.
 
 ## 현재 상태
 
 - **로컬 구현·테스트 완료:** Home / About / Relax / RE:ST Care UI, 음악 플레이어, 3분 타이머, Python API, 오류 안내, 반응형.
-- **계정 설정 후 확인할 항목:** 유효한 키로 실제 AI 추천 받기, GitHub 원격 push, Vercel 배포, 공개 주소에서 최종 검증. 사용자 요청에 따라 지금은 진행하지 않았습니다.
+- **AI 연동 수정:** 사용자 제공 Codyssey API 콘솔에 맞춰 연결 대상을 변경했습니다. 기존 키로 실제 추천 HTTP 200을 확인했습니다.
+- **남은 항목:** GitHub 원격 push, Vercel 배포와 공개 주소 검증은 아직 진행하지 않았습니다.
 - **API 키 없음:** 연결 준비 안내와 Personal 직접 선택 경로가 표시됩니다. 임시 추천으로 대체하지 않습니다.
 - **배포 URL:** 아직 배포하지 않았습니다. 확인된 공개 URL이 없습니다.
 - **기존 GitHub 저장소:** [Duebii/Codyssey](https://github.com/Duebii/Codyssey) — 기존 `origin`에서 확인. 이번 A1-3 변경의 원격 업로드는 별도 절차가 필요합니다.
@@ -37,7 +60,7 @@ python dev_server.py
 2. **Personal:** 기본 집중 호흡 / 편안한 수면 호흡 / 긴장을 푸는 호흡 중 직접 선택.
 3. **호흡 플레이어:** 사용자 클릭 후 음악 시작, 일시정지·재개, 처음부터 재생, 음소거·음량, 3분 타이머와 완료 안내, 홈 이동.
 4. **원형 호흡 가이드:** 편안한 4초 들이마시기·6초 내쉬기 제안. 속도를 강요하지 않고 애니메이션 감소 설정을 존중합니다.
-5. **RE:ST Care:** 세 입력을 Python으로 보내 실제 OpenAI API를 호출하는 코드. 서버에서 허용된 세 코스만 검증하여 반환합니다.
+5. **RE:ST Care:** 세 입력을 Python으로 보내 실제 Codyssey API를 호출하는 코드. 서버에서 허용된 세 코스만 검증하여 반환합니다.
 6. **실패 처리:** 빈 입력, 길이 제한, 중복 요청, API 키 미설정, 4xx/5xx, 잘못된 AI 결과, 지연·취소·음악 로딩 오류 안내.
 7. **접근성·반응형:** 키보드 메뉴·라디오 선택, 포커스 표시, 상태 안내, 모바일·태블릿·데스크톱 레이아웃.
 
@@ -51,7 +74,7 @@ python dev_server.py
 | 디자인·반응형 | 순수 CSS, 제공된 사진, SVG 아이콘·배경 뷰포트 |
 | 화면 이동·폼·플레이어 | Vanilla JavaScript, Fetch, HTML Audio, Web Audio |
 | API | Python 3.12, `BaseHTTPRequestHandler`, `urllib.request` |
-| AI | OpenAI Responses API + Structured Outputs, 기본 `gpt-4.1-mini` |
+| AI | Codyssey OpenAI 호환 Chat Completions + 서버 JSON 검증, 기본 `gpt-5-mini` |
 | 배포 준비 | Vercel 파일 기반 Python Functions, GitHub 기존 저장소 |
 | 검증 | Python `unittest`, Playwright + Chrome (개발 테스트 전용) |
 
@@ -64,7 +87,7 @@ A1-3/
 ├── index.html                화면·메뉴·입력 폼·플레이어
 ├── css/style.css             색상·레이아웃·반응형·호흡 원
 ├── js/app.js                 화면 이동·오디오·타이머·fetch
-├── api/recommend.py          실제 OpenAI 호출·입출력 검증
+├── api/recommend.py          실제 Codyssey 호출·입출력 검증
 ├── audio/
 │   ├── focus.mp3             제공된 원본의 복사본
 │   ├── sleep.mp3
@@ -96,8 +119,8 @@ A1-3/
 
 | 변수 | 필수 | 의미 |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | 실제 AI 추천에 필요 | 서버에서만 읽는 OpenAI API 키 |
-| `OPENAI_MODEL` | 선택 | Responses·Structured Outputs 지원 모델. 기본 `gpt-4.1-mini` |
+| `OPENAI_API_KEY` | 실제 AI 추천에 필요 | 서버에서만 읽는 Codyssey API 키 (호환 변수명 유지) |
+| `OPENAI_MODEL` | 선택 | Codyssey 콘솔에서 사용 가능한 CHAT 모델. 기본 `gpt-5-mini` |
 
 실제 값을 소스·README·`.env.example`·스크린샷에 넣지 않습니다. `.env`는 Git과 배포에서 제외하고 로컬 HTTP 접근도 막습니다. Vercel에서는 `.env` 대신 프로젝트 환경 변수에 직접 설정합니다.
 
@@ -110,9 +133,9 @@ js/app.js: 필수값 확인 → JSON.stringify → fetch('/api/recommend', POST)
   ↓
 api/recommend.py: JSON 파싱 → 필수값·길이 검사
   ↓
-서버 환경 변수의 키 → https://api.openai.com/v1/responses
+서버 환경 변수의 키 → https://copa.codyssey.kr/v1/chat/completions
   ↓
-JSON Schema: course_id는 focus / sleep / relax 중 하나, reason은 짧은 한국어
+프롬프트로 JSON 요청: course_id는 focus / sleep / relax 중 하나, reason은 짧은 한국어
   ↓
 Python: 실제 응답의 완료 상태·형식·ID·이유를 다시 검증
   ↓
@@ -129,7 +152,7 @@ Python: 실제 응답의 완료 상태·형식·ID·이유를 다시 검증
 }
 ```
 
-API 키나 사용자 입력을 콘솔·서버 로그에 출력하지 않습니다. 로그에는 요청 식별자, HTTP 상태, 안전한 오류 코드만 남깁니다. 사용자 입력은 서버의 DB나 브라우저 저장소에 보관하지 않습니다. 추천 요청은 OpenAI로 전달되며 `store: false`를 지정합니다.
+API 키나 사용자 입력을 콘솔·서버 로그에 출력하지 않습니다. 로그에는 요청 식별자, HTTP 상태, 안전한 오류 코드만 남깁니다. 사용자 입력은 서버의 DB나 브라우저 저장소에 보관하지 않습니다. 추천 요청은 Codyssey AI 서비스로 전달됩니다. 제공자 측 보관 정책은 해당 서비스 정책을 따릅니다.
 
 ## 오류와 실패 처리
 
@@ -177,9 +200,11 @@ node tests/browser-edge-check.cjs
 - 세 MP3를 실제로 재생하고 일시정지·재개·화면 이동 시 정지 확인.
 - **실제 180초 재생**하여 짧은 파일 반복, `03:00` 완료, 오디오 정지, 다시 시작 확인.
 - 빈 입력·키 없음은 실제 로컬 API로 검증. HTTP 오류·지연·추천 성공 UI는 **테스트 전용 모의 응답**으로 검증.
-- 실제 OpenAI 성공 응답과 Vercel 환경의 실행 결과는 계정 설정 후 별도 검증 필요.
+- Codyssey의 실제 AI 추천·결과 표시·코스 이동을 검증했습니다. Vercel 환경의 실행 결과는 배포 후 별도 검증이 필요합니다.
 
 스크린샷과 상세 기록은 [증빙 자료](docs/evidence/README.md)에 있습니다.
+
+[4번 증빙 — AI 코딩 도구 사용 과정](docs/evidence/development-log.md)에는 실제 대화 발췌, API 연결 오류 수정, Computer Use 캡처 과정을 정리했습니다.
 
 ## Vercel 배포 요약
 
@@ -202,5 +227,5 @@ Refresh(6분 ASMR), Return(9분 명상), Archive, DB, 개인화 추천, 커머�
 - [사용한 이미지·음원과 원본 보존](docs/assets.md)
 - [Vercel Python `/api` 함수](https://vercel.com/docs/functions/runtimes/python/api-directory)
 - [Vercel 환경 변수](https://vercel.com/docs/environment-variables)
-- [OpenAI Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs)
-- [GPT-4.1 mini 모델 문서](https://developers.openai.com/api/docs/models/gpt-4.1-mini)
+- API 주소·호출 형식은 사용자가 제공한 Codyssey API 콘솔의 Chat Completions 예시를 따릅니다.
+- 모델 목록은 사용자의 Codyssey API 콘솔에서 확인합니다.

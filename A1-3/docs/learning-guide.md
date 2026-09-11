@@ -44,15 +44,15 @@ Web Audio의 GainNode는 음량을 조절하는 장치입니다. 하나는 사�
 
 ## 5. Python Serverless Function은 무엇을 하나요?
 
-`api/recommend.py`는 화면 뒤에서 요청을 처리합니다. 브라우저가 POST를 보내면 `handler.do_POST()`가 실행됩니다. JSON을 읽고 필수값·길이를 다시 확인한 다음 `call_ai()`가 OpenAI에 HTTPS 요청을 보냅니다.
+`api/recommend.py`는 화면 뒤에서 요청을 처리합니다. 브라우저가 POST를 보내면 `handler.do_POST()`가 실행됩니다. JSON을 읽고 필수값·길이를 다시 확인한 다음 `call_ai()`가 Codyssey에 HTTPS 요청을 보냅니다.
 
-AI는 JSON Schema에 따라 ID와 이유를 반환하지만, 서버는 이를 그대로 믿지 않고 `extract_recommendation()`과 `validate_recommendation()`으로 재검사합니다. 세 ID 중 하나가 아니거나 이유가 비어 있으면 502 오류를 보냅니다. 한국어 코스명은 서버의 `COURSES`에서 결정합니다.
+AI에는 JSON 형식의 ID와 이유를 요청하고, 서버는 이를 그대로 믿지 않고 `extract_recommendation()`과 `validate_recommendation()`으로 재검사합니다. 세 ID 중 하나가 아니거나 이유가 비어 있으면 502 오류를 보냅니다. 한국어 코스명은 서버의 `COURSES`에서 결정합니다.
 
 Vercel에서는 요청이 들어올 때 실행 환경이 함수를 처리하므로 개인 컴퓨터에 서버 터미널을 계속 켜놓을 필요가 없습니다. 로컬 `dev_server.py`는 같은 API 코드를 내 컴퓨터의 HTTP 서버에서 실행하도록 연결해 줍니다.
 
 ## 6. API 키를 환경 변수로 관리하는 이유
 
-브라우저가 받는 HTML과 JavaScript는 누구나 개발자 도구로 읽을 수 있습니다. 키를 거기에 넣으면 다른 사람이 복사할 수 있습니다. 서버만 읽을 수 있는 환경 변수에 넣으면 키를 화면으로 전달하지 않고 OpenAI 인증에 사용할 수 있습니다.
+브라우저가 받는 HTML과 JavaScript는 누구나 개발자 도구로 읽을 수 있습니다. 키를 거기에 넣으면 다른 사람이 복사할 수 있습니다. 서버만 읽을 수 있는 환경 변수에 넣으면 키를 화면으로 전달하지 않고 Codyssey API 인증에 사용할 수 있습니다.
 
 로컬에서는 `.env`를 서버가 읽습니다. Git은 이 파일을 무시하고, 로컬 서버도 HTTP로 이 파일을 제공하지 않습니다. 배포 환경에서는 Vercel의 Environment Variables가 같은 역할을 합니다. 실제 키는 코드나 대화에 넣지 않습니다.
 

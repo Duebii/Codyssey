@@ -1,5 +1,26 @@
 # 증빙 자료와 확인 범위
 
+## Computer Use 직접 캡처 (2026-09-10)
+
+Chrome의 실제 로컬 서비스에서 Computer Use로 입력·버튼 클릭·추천 코스 이동을 수행하고, 표시된 화면을 원본 JPEG로 저장했습니다. 모의 응답이나 화면 합성은 사용하지 않았습니다.
+
+- [3번: AI 입력](03-ai-input-computer-use.jpg)
+- [3번: 실제 요청 중 로딩](03-ai-loading-computer-use.jpg)
+- [3번: 실제 AI 추천 결과](03-ai-result-computer-use.jpg)
+- [3번: 추천된 코스 자동 선택](03-ai-course-selected-computer-use.jpg)
+
+검증 입력은 `집 / 오랜 작업을 마치고 잠깐 쉬고 싶어요. / 긴장을 내려놓고 싶어요.`이며, 실제 결과는 `긴장을 푸는 호흡`입니다. API 키는 화면에 포함되지 않았습니다. 공개 배포가 아닌 로컬 실행 증빙입니다.
+
+## Codyssey 실제 AI 연동 검증 (2026-09-10)
+
+기존 키를 그대로 사용하고 연결 주소를 `https://copa.codyssey.kr/v1/chat/completions`, 모델을 `gpt-5-mini`로 변경했습니다. 실제 요청 HTTP 200, 추천 이유 표시, 추천된 코스의 자동 선택을 브라우저에서 확인했습니다.
+
+- [실제 AI 입력 화면](ai-input-real.png)
+- [실제 AI 추천 결과](ai-result-real.png)
+- [실제 호출 검증 기록](codyssey-live-report.json): `actualAI: true`, 키 미포함, 검증용 일반 문장만 사용.
+
+아래 `browser-report.json`과 `TEST-ONLY` 이미지는 최초 구현 당시의 모의 응답 검사 기록이며 위 실제 호출 기록과 구분합니다. Codyssey 요청·응답 형식으로 변경한 서버 테스트도 13개 모두 통과했습니다.
+
 ## 실제 로컬 서비스 화면
 
 - 데스크톱: [Home](desktop-home.png), [About](desktop-about.png), [Relax](desktop-relax.png), [Care](desktop-care.png), [호흡](desktop-breathe.png)
@@ -26,7 +47,6 @@
 
 ## 아직 준비하지 않은 제출 증빙
 
-- **실제 AI 추천 결과:** 유효한 API 키 설정 후 실행하여 `ai-result-real.png`로 저장할 예정.
 - **공개 URL·Vercel 배포:** 사용자 요청으로 계정 설정·배포를 나중에 진행하므로 없음.
 - **GitHub 원격 커밋 화면:** GitHub 인증 후 push·확인 필요.
 

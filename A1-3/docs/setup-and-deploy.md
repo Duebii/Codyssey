@@ -19,19 +19,21 @@
 
 Python 3.12 이상이 필요합니다. 별도 `pip install`이나 프론트엔드 빌드는 필요 없습니다. `index.html`을 더블 클릭하거나 일반 정적 서버만 쓰면 Python API가 실행되지 않으니 위 명령을 사용합니다.
 
-## 2. OpenAI API 키를 준비하기
+## 2. Codyssey API 키 설정
 
-1. 브라우저에서 [OpenAI Platform](https://platform.openai.com/)에 로그인합니다.
-2. 사용할 프로젝트를 선택합니다. 프로젝트의 API 사용 권한·결제 설정·사용 한도를 확인합니다. API 호출에는 별도의 API 사용 요금이 발생할 수 있습니다.
-3. Platform의 API Keys 화면에서 새 비밀 키를 만듭니다. 키를 직접 안전하게 보관합니다.
-4. `A1-3` 폴더에서 `.env.example`을 복사해 파일 이름을 `.env`로 정합니다. 이미 `.env`가 있다면 복사로 덮어쓰지 말고 기존 파일을 편집합니다.
-5. 편집기에서 `.env`를 열고 **`OPENAI_API_KEY=`의 등호 뒤에 실제 키를 직접 붙여 넣은 뒤 저장**합니다. `.env.txt`가 아니라 `.env`인지 확인합니다.
-6. `OPENAI_MODEL=`은 비워 두어도 됩니다. 기본 모델은 `gpt-4.1-mini`입니다. 변경하려면 계정에서 이용 가능하고 Responses API와 Structured Outputs를 지원하는 모델명을 넣습니다.
-7. 서버가 켜져 있으면 `Ctrl+C` 후 `python dev_server.py`로 다시 실행합니다. 터미널에 `AI: configured`가 표시되는지만 확인합니다. 실제 키는 출력되지 않습니다.
+이 프로젝트는 사용자가 제공한 Codyssey API 콘솔의 **OpenAI 호환 Chat Completions** 방식으로 연결합니다. OpenAI 본사에서 새 키를 발급할 필요가 없습니다.
 
-API 인증 방식은 [OpenAI API 인증 문서](https://developers.openai.com/api/reference/overview#authentication)를, 응답 구조는 [Structured Outputs 문서](https://developers.openai.com/api/docs/guides/structured-outputs)를 참고합니다.
+1. Codyssey API 콘솔에서 발급한 키를 사용합니다. 기존 `.env`의 키를 그대로 사용해 실제 추천 성공을 확인했습니다.
+2. `.env`의 `OPENAI_API_KEY=` 뒤에 Codyssey 키를 직접 저장합니다. 변수 이름은 호환성을 위해 유지했으며 키를 보내는 주소는 Codyssey입니다.
+3. `OPENAI_MODEL=gpt-5-mini`로 설정합니다. 다른 모델을 쓰려면 Codyssey 콘솔에 나오는 사용 가능한 CHAT 모델 ID를 사용합니다.
+4. 서버 터미널에서 `Ctrl+C`를 누른 뒤 `python dev_server.py`로 **실제로 재시작**합니다. 브라우저 새로고침만으로는 `.env` 변경이 반영되지 않습니다.
+5. [로컬 Care](http://localhost:3000/#care)에서 추천을 요청합니다.
 
-`.env`는 Git과 배포 업로드에서 제외되고 로컬 서버로도 열 수 없도록 구현했습니다. 키가 없는 상태에서는 RE:ST Care가 연결 안내를 보여주며 Personal은 정상 작동합니다. `configured`는 키가 설정됐다는 뜻이며, 유효한 키인지는 다음 실제 요청으로 확인합니다.
+- API 주소: `https://copa.codyssey.kr/v1/chat/completions`
+- 인증: 서버에서 `Authorization: Bearer`로 Codyssey 키 전달
+- 요청: `model`, `messages`
+- 응답: `choices[0].message.content`의 JSON을 서버에서 검증
+- 키와 비밀번호는 대화·스크린샷·Git에 넣지 않습니다.
 
 ## 3. 실제 AI 추천 확인하기
 
@@ -127,7 +129,7 @@ GitHub 연동의 자동 배포 동작은 [Vercel for GitHub 문서](https://verc
 1. Import 화면의 **Environment Variables**, 또는 프로젝트 **Settings → Environment Variables**에서 이름에 `OPENAI_API_KEY`를 입력합니다.
 2. **Value에 실제 키를 직접 입력**합니다. 이 칸의 스크린샷은 공유하지 않습니다.
 3. 적용 환경에서 **Production**을 선택합니다. 미리보기 배포에서도 AI를 쓸 계획이라면 **Preview**에도 설정합니다.
-4. `OPENAI_MODEL`은 선택 사항입니다. 생략하면 코드의 기본 모델을 사용합니다.
+4. `OPENAI_MODEL`은 `gpt-5-mini`로 설정합니다. 생략해도 같은 모델을 사용합니다. `OPENAI_API_KEY` 값에는 Codyssey에서 발급한 키를 넣습니다.
 5. **Deploy**를 누르고 Ready 상태가 될 때까지 기다립니다.
 6. 배포 성공 화면에서 실제 공개 주소를 엽니다. 주소를 확인한 뒤 README의 배포 URL에 기록합니다.
 7. 환경 변수를 나중에 추가·수정했다면 Deployments에서 **Redeploy**를 실행합니다. `.env`는 Vercel로 업로드되지 않으므로 로컬 키 설정과 Vercel 키 설정은 별개입니다.

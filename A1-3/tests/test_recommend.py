@@ -15,7 +15,7 @@ VALID = {"environment": "집", "situation": "작업을 마치고 머리가 복�
 
 
 def provider_output(course_id="relax", reason="마음을 천천히 내려놓는 시간이 어울려요."):
-    return {"status": "completed", "output": [{"type": "message", "content": [{"type": "output_text", "text": json.dumps({"course_id": course_id, "reason": reason})}]}]}
+    return {"choices": [{"finish_reason": "stop", "message": {"role": "assistant", "content": json.dumps({"course_id": course_id, "reason": reason})}}]}
 
 
 class RecommendationTests(unittest.TestCase):
@@ -42,7 +42,15 @@ class RecommendationTests(unittest.TestCase):
                 validate_recommendation(result)
 
     def test_refusal_incomplete_and_malformed_provider_json(self):
-        invalid = [{"status": "incomplete", "output": []}, {"status": "completed", "output": [{"type": "message", "content": [{"type": "refusal"}]}]}, {"status": "completed", "output": []}, {"status": "completed", "output": "invalid"}, {"status": "completed", "output": [{"type": "message", "content": [{"type": "output_text", "text": "not-json"}]}]}]
+        invalid = [
+            {"choices": [{"finish_reason": "length", "message": {"content": "{}"}}]},
+            {"choices": [{"finish_reason": "stop", "message": {"refusal": "declined", "content": "{}"}}]},
+            {"choices": []}, {"choices": "invalid"},
+            {"choices": [{"finish_reason": "stop", "message": {"content": "not-json"}}]},
+            {"choices": [{"finish_reason": "stop", "message": {"content": None}}]},
+            {"choices": [{"finish_reason": "stop", "message": {"content": "```json\n{}\n```"}}]},
+            provider_output("invented"),
+        ]
         for response in invalid:
             with self.subTest(response=response), self.assertRaises(APIError):
                 extract_recommendation(response)
@@ -62,10 +70,11 @@ class RecommendationTests(unittest.TestCase):
         self.assertEqual(call_ai(VALID)["course_id"], "relax")
         sent = request.call_args.args[0]
         payload = json.loads(sent.data)
-        self.assertEqual(sent.full_url, "https://api.openai.com/v1/responses")
-        self.assertEqual(payload["text"]["format"]["schema"]["properties"]["course_id"]["enum"], ["focus", "sleep", "relax"])
-        self.assertEqual(payload["model"], "gpt-4.1-mini")
-        self.assertFalse(payload["store"])
+        self.assertEqual(sent.full_url, "https://copa.codyssey.kr/v1/chat/completions")
+        self.assertEqual([m["role"] for m in payload["messages"]], ["system", "user"])
+        self.assertEqual(json.loads(payload["messages"][1]["content"]), VALID)
+        self.assertEqual(payload["model"], "gpt-5-mini")
+        self.assertEqual(set(payload), {"model", "messages"})
         self.assertEqual(request.call_args.kwargs["timeout"], 20)
 
     @patch.dict(os.environ, {"OPENAI_API_KEY": "unit-test-placeholder"})

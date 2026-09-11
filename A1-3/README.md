@@ -4,7 +4,7 @@
 
 RE:ST는 숨가쁜 일상 속에서 나에게 필요한 쉼을 발견하고, 3분의 호흡으로 쉬어가는 웹 서비스입니다. 연령·성별·직업에 관계없이 잠깐의 휴식이 필요한 모두를 위한 서비스입니다.
 
-[서비스 이용하기](https://codyssey-theta.vercel.app/) · [GitHub 저장소](https://github.com/Duebii/Codyssey/tree/main/A1-3)
+[서비스 이용하기](https://codyssey-theta.vercel.app/)
 
 ## 주요 화면
 
@@ -14,13 +14,13 @@ RE:ST는 숨가쁜 일상 속에서 나에게 필요한 쉼을 발견하고, 3�
 
 ![데스크톱 Home — 일상 속, 나의 틈과 나의 쉼 시작하기 버튼](docs/evidence/desktop-home.png)
 
-### 내게 맞는 쉼 — RE:ST Care (PC.ver)
+### 내게 맞는 쉼 — RE:ST Care (PC)
 
 현재 환경·상황·필요한 도움을 알려주면, AI가 준비된 세 가지 호흡 중 하나와 추천 이유를 제안합니다. 이 코스로 쉬어가기’를 누르면 추천된 코스가 선택됩니다.
 
 ![데스크톱 RE:ST Care — 실제 AI가 추천한 긴장을 푸는 호흡과 추천 이유](docs/evidence/03-ai-result-computer-use.jpg)
 
-### 손안의 3분 — Home과 호흡 플레이어 (MO.ver)
+### 손안의 3분 — Home과 호흡 플레이어 (MO)
 
 원하는 호흡을 직접 고른 뒤, 시작 버튼을 눌러 음악과 호흡 가이드를 따라 쉬어갑니다. 플레이어에서 일시정지·재개와 음량 조절을 할 수 있습니다.
 

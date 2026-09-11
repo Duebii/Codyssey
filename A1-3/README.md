@@ -2,23 +2,25 @@
 
 **A moment to rest. 쉬어가고, 발견하고, 나아간다.**
 
-RE:ST는 숨가쁜 일상 속에서 나에게 필요한 쉼을 발견하고, 3분의 호흡으로 쉬어가는 웹 서비스입니다. 연령·성별·직업에 관계없이 잠깐의 휴식이 필요한 모든 사람을 위한 MVP입니다.
+RE:ST는 숨가쁜 일상 속에서 나에게 필요한 쉼을 발견하고, 3분의 호흡으로 쉬어가는 웹 서비스입니다. 연령·성별·직업에 관계없이 잠깐의 휴식이 필요한 모두를 위한 서비스입니다.
+
+[서비스 이용하기](https://codyssey-theta.vercel.app/) · [GitHub 저장소](https://github.com/Duebii/Codyssey/tree/main/A1-3)
 
 ## 주요 화면
 
-### 첫 만남 — Home · 데스크톱
+### 첫 만남 — Home (PC)
 
 따뜻한 오후 빛을 담은 첫 화면에서 나를 위한 짧은 쉼을 시작합니다.
 
 ![데스크톱 Home — 일상 속, 나의 틈과 나의 쉼 시작하기 버튼](docs/evidence/desktop-home.png)
 
-### 내게 맞는 쉼 — RE:ST Care · 데스크톱
+### 내게 맞는 쉼 — RE:ST Care (PC.ver)
 
-현재 환경·상황·필요한 도움을 알려주면, AI가 준비된 세 가지 호흡 중 하나와 추천 이유를 제안합니다. 아래는 **실제 Codyssey AI 응답을 Computer Use로 직접 캡처한 화면**입니다. ‘이 코스로 쉬어가기’를 누르면 추천된 코스가 선택됩니다.
+현재 환경·상황·필요한 도움을 알려주면, AI가 준비된 세 가지 호흡 중 하나와 추천 이유를 제안합니다. 이 코스로 쉬어가기’를 누르면 추천된 코스가 선택됩니다.
 
 ![데스크톱 RE:ST Care — 실제 AI가 추천한 긴장을 푸는 호흡과 추천 이유](docs/evidence/03-ai-result-computer-use.jpg)
 
-### 손안의 3분 — 코스 선택과 호흡 플레이어 · 모바일
+### 손안의 3분 — Home과 호흡 플레이어 (MO.ver)
 
 원하는 호흡을 직접 고른 뒤, 시작 버튼을 눌러 음악과 호흡 가이드를 따라 쉬어갑니다. 플레이어에서 일시정지·재개와 음량 조절을 할 수 있습니다.
 
@@ -26,20 +28,7 @@ RE:ST는 숨가쁜 일상 속에서 나에게 필요한 쉼을 발견하고, 3�
 
 ![모바일 호흡 플레이어의 시작 전 화면 — 원형 가이드, 3분 타이머, 재생과 음량 조절](docs/evidence/mobile-breathe.png)
 
-모두 로컬 서비스의 실제 화면입니다. 모바일 이미지는 너비 390px에서 캡처했으며, 플레이어는 시작 전 상태입니다. 전체 캡처와 검증 기록은 [증빙 자료](docs/evidence/README.md)에서 확인할 수 있습니다.
-
-## 현재 상태
-
-- **로컬 구현·테스트 완료:** Home / About / Relax / RE:ST Care UI, 음악 플레이어, 3분 타이머, Python API, 오류 안내, 반응형.
-- **AI 연동 수정:** 사용자 제공 Codyssey API 콘솔에 맞춰 연결 대상을 변경했습니다. 기존 키로 실제 추천 HTTP 200을 확인했습니다.
-- **남은 항목:** GitHub 원격 push, Vercel 배포와 공개 주소 검증은 아직 진행하지 않았습니다.
-- **API 키 없음:** 연결 준비 안내와 Personal 직접 선택 경로가 표시됩니다. 임시 추천으로 대체하지 않습니다.
-- **배포 URL:** 아직 배포하지 않았습니다. 확인된 공개 URL이 없습니다.
-- **기존 GitHub 저장소:** [Duebii/Codyssey](https://github.com/Duebii/Codyssey) — 기존 `origin`에서 확인. 이번 A1-3 변경의 원격 업로드는 별도 절차가 필요합니다.
-- **작업 위치:** `C:\Users\hwkim\Desktop\Codyssey\A1-3`
-- **작업 브랜치:** `codex/rest-mvp`
-
-계정 설정은 [초보자를 위한 API 키·GitHub·Vercel 순서 안내](docs/setup-and-deploy.md)를 따라 진행하세요. 실제 키나 비밀번호를 대화에 공유할 필요가 없습니다.
+모두 로컬 서비스의 실제 화면입니다. 플레이어는 시작 전 상태입니다. 전체 캡처와 검증 기록은 [증빙 자료](docs/evidence/README.md)에서 확인할 수 있습니다.
 
 ## 바로 실행하기
 
@@ -75,7 +64,7 @@ python dev_server.py
 | 화면 이동·폼·플레이어 | Vanilla JavaScript, Fetch, HTML Audio, Web Audio |
 | API | Python 3.12, `BaseHTTPRequestHandler`, `urllib.request` |
 | AI | Codyssey OpenAI 호환 Chat Completions + 서버 JSON 검증, 기본 `gpt-5-mini` |
-| 배포 준비 | Vercel 파일 기반 Python Functions, GitHub 기존 저장소 |
+| 배포 | Vercel Python Functions, GitHub `main` 연동 |
 | 검증 | Python `unittest`, Playwright + Chrome (개발 테스트 전용) |
 
 React / Vue / Next.js 등 프론트엔드 프레임워크를 사용하지 않습니다. Node.js와 Playwright는 브라우저 자동 테스트를 다시 실행할 때만 필요하며 서비스 실행에는 필요하지 않습니다.
@@ -102,8 +91,8 @@ A1-3/
 ├── .env.example              환경 변수 이름만 들어 있는 예시
 ├── tests/
 │   ├── test_recommend.py     서버·HTTP·모델 응답 실패 테스트
-│   └── browser-check.cjs     반응형·폼·실제 음원·3분 테스트
-│       browser-edge-check.cjs 키보드·보안·취소·음악 오류 검사
+│   ├── browser-check.cjs     반응형·폼·실제 음원·3분 테스트
+│   └── browser-edge-check.cjs 키보드·보안·취소·음악 오류 검사
 ├── docs/
 │   ├── service-plan.md       서비스 기획서
 │   ├── setup-and-deploy.md   계정 설정과 배포 따라 하기
@@ -176,6 +165,18 @@ API 키나 사용자 입력을 콘솔·서버 로그에 출력하지 않습니�
 
 ## 테스트
 
+### 실제 AI 추천 확인
+
+1. [RE:ST Care](https://codyssey-theta.vercel.app/#care)를 엽니다.
+2. 현재 환경은 `집`, 상황은 `오랜 작업을 마치고 잠깐 쉬고 싶어요.`, 필요한 도움은 `긴장을 내려놓고 싶어요.`로 입력합니다.
+3. **나에게 맞는 쉼 찾기**를 누르고 로딩 후 코스명과 추천 이유가 나타나는지 확인합니다.
+4. **이 코스로 쉬어가기**를 눌러 추천 코스가 선택된 상태로 이동하는지 확인합니다.
+5. **이 호흡으로 시작하기 → 호흡 시작**을 눌러 음악·타이머를 확인합니다.
+
+추천은 실행마다 달라질 수 있지만 코스는 `focus`, `sleep`, `relax` 중 하나여야 합니다. 필수 입력을 비운 채 요청하면 입력 안내가 표시되어야 합니다. 오류가 나면 아래 실패 처리 표와 [설정·문제 해결 안내](docs/setup-and-deploy.md)를 확인합니다. 로컬에서는 같은 과정을 `http://localhost:3000/#care`에서 실행합니다.
+
+### 자동 테스트
+
 서버 테스트(외부 AI 호출 없음):
 
 ```powershell
@@ -191,6 +192,8 @@ node tests/browser-check.cjs --full-duration
 node tests/browser-edge-check.cjs
 ```
 
+브라우저 자동 테스트는 **API 키가 설정되지 않은 별도 로컬 서버**를 전제로 키 미설정 안내와 모의 응답을 검사합니다. 실제 AI가 연결된 공개 배포 주소에는 이 스크립트를 그대로 실행하지 않습니다.
+
 기존 개발 환경에서는 번들 Playwright를 사용해 실행했고, 서비스에 npm 의존성을 추가하지 않았습니다. `--full-duration`을 빼면 실제 3분 대기를 생략합니다. 전체 실행 결과는 `browser-report.json`, 짧은 실행은 `browser-smoke-report.json`으로 기록합니다.
 
 검증 결과:
@@ -200,21 +203,12 @@ node tests/browser-edge-check.cjs
 - 세 MP3를 실제로 재생하고 일시정지·재개·화면 이동 시 정지 확인.
 - **실제 180초 재생**하여 짧은 파일 반복, `03:00` 완료, 오디오 정지, 다시 시작 확인.
 - 빈 입력·키 없음은 실제 로컬 API로 검증. HTTP 오류·지연·추천 성공 UI는 **테스트 전용 모의 응답**으로 검증.
-- Codyssey의 실제 AI 추천·결과 표시·코스 이동을 검증했습니다. Vercel 환경의 실행 결과는 배포 후 별도 검증이 필요합니다.
+- 로컬에서 Codyssey의 실제 AI 추천·결과 표시·코스 이동을 검증했습니다.
+- 공개 Vercel 주소에서 세 음원 모두 HTTP 200과 `audio/mpeg` 응답을 확인했습니다(2026-09-11). 공개 사이트의 실제 AI 추천·메뉴·반응형·180초 완료를 포함한 전체 흐름은 추가 검증이 필요합니다.
 
 스크린샷과 상세 기록은 [증빙 자료](docs/evidence/README.md)에 있습니다.
 
 [4번 증빙 — AI 코딩 도구 사용 과정](docs/evidence/development-log.md)에는 실제 대화 발췌, API 연결 오류 수정, Computer Use 캡처 과정을 정리했습니다.
-
-## Vercel 배포 요약
-
-1. GitHub 로그인 후 이 변경을 저장소에 push합니다.
-2. Vercel에서 기존 GitHub 저장소를 Import합니다.
-3. **Root Directory = A1-3 / Framework = Other**를 지정합니다.
-4. 프로젝트 환경 변수에 `OPENAI_API_KEY`를 설정합니다.
-5. Deploy 후 실제 공개 URL에서 추천·음원·타이머를 확인합니다.
-
-프로젝트 루트에 `api/recommend.py`가 있어야 `/api/recommend`가 됩니다. `vercel.json`은 Python의 `maxDuration`을 30초로 지정하고, 큰 음원을 Python 함수 번들에서 제외합니다. 음악은 정적 파일로 제공됩니다. [자세한 단계별 안내](docs/setup-and-deploy.md)를 참고하세요.
 
 ## 앞으로 확장할 기능
 
@@ -223,6 +217,7 @@ Refresh(6분 ASMR), Return(9분 명상), Archive, DB, 개인화 추천, 커머�
 ## 학습 문서와 공식 참고
 
 - [서비스 기획서](docs/service-plan.md)
+- [실행·환경 변수·Vercel 배포 방법](docs/setup-and-deploy.md)
 - [HTML·CSS·JavaScript·Python·Git 동작 설명](docs/learning-guide.md)
 - [사용한 이미지·음원과 원본 보존](docs/assets.md)
 - [Vercel Python `/api` 함수](https://vercel.com/docs/functions/runtimes/python/api-directory)

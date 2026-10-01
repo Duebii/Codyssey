@@ -175,7 +175,7 @@ def main():
               "| 그래프 설명 초안 작성 | 관찰과 해석을 구분하고 단위를 명확히 하기 위해 | 실제 계산 수치와 설명 대조, 최종 해석은 사용자 검토 |",
               "", "## 출처", "",
               "[DEXKOUS](https://fred.stlouisfed.org/series/DEXKOUS), [DEXUSEU](https://fred.stlouisfed.org/series/DEXUSEU), [DEXJPUS](https://fred.stlouisfed.org/series/DEXJPUS). 원출처: 미국 연방준비제도 H.10, 제공: FRED. 자세한 수집·정제 기록은 [DATA_CHECK.md](DATA_CHECK.md)에 있다.",
-              "", "최종 인사이트와 결론·회고는 [REPORT.md](REPORT.md), 제출 안내와 설명 연습은 [SUBMISSION.md](SUBMISSION.md)에 정리했다.", ""]
+              "", "최종 인사이트와 결론·회고는 [REPORT.md](REPORT.md)에 정리했다.", ""]
     (OUT / "ANALYSIS_NOTES.md").write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 

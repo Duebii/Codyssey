@@ -117,7 +117,8 @@ def main():
     if not all(s in text for s in report_sections):
         raise ValueError("Required report section is missing")
     local_links = 0
-    for path in sorted(OUT.glob("*.md")) + [ROOT / "README.md"]:
+    # Personal working notes may remain locally; verify the published analysis docs.
+    for path in [report, OUT / "DATA_CHECK.md", OUT / "ANALYSIS_NOTES.md", ROOT / "README.md"]:
         for link in re.findall(r"\]\(([^)]+)\)", path.read_text(encoding="utf-8")):
             if link.startswith(("https://", "http://", "#")):
                 continue

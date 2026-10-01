@@ -2,3 +2,5 @@ work/
 __pycache__/
 *.pyc
 .venv/
+/outputs/SUBMISSION.md
+/outputs/WORKLIST.md

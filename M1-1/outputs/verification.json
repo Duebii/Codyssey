@@ -1,12 +1,12 @@
 {
   "status": "passed",
-  "checked_at_utc": "2026-10-01T03:57:14.954602+00:00",
+  "checked_at_utc": "2026-10-01T06:59:54.004264+00:00",
   "method": "independent raw CSV read, Decimal arithmetic, statistics.stdev",
   "common_observations": 1666,
   "currency_series": 3,
   "monthly_periods": 80,
   "numeric_checks": 20433,
-  "local_links_checked": 49,
+  "local_links_checked": 31,
   "report_images": 3,
   "export_tolerance_absolute": 1e-08,
   "raw_hashes_match": true

@@ -2,17 +2,14 @@
 
 분석 기간: 2020-01-01–2026-08-31.
 
-현재 단계: 기본 제출물 작성·실행·계산·링크 검증과 GitHub 게시 확인 완료. 제출 전 사용자 해석·회고 확인을 위한 설명 연습 문서도 포함했다.
+현재 단계: 기본 제출물 작성·실행·계산·링크 검증과 GitHub 게시 확인 완료.
 
 먼저 [분석 리포트](outputs/REPORT.md)를 읽는다. 그래프 3개, 인사이트 3개, 처리 기준, 한계, AI 사용 로그를 포함한다.
-
-진행 상황은 [작업 체크리스트](outputs/WORKLIST.md)에 기록하고 단계 완료 시 갱신한다.
 
 ## 제출 안내
 
 - [GitHub 프로젝트 폴더](https://github.com/Duebii/Codyssey/tree/main/M1-1)
 - [GitHub 분석 리포트](https://github.com/Duebii/Codyssey/blob/main/M1-1/outputs/REPORT.md)
-- [필수 요구사항 대조와 설명 연습](outputs/SUBMISSION.md)
 
 코드·원본 데이터·리포트·그래프·의존성 목록을 이 폴더에 함께 포함한다. 대시보드와 분해·예측은 선택 과제이며 이번 제출에는 포함하지 않는다.
 

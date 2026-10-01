@@ -64,4 +64,4 @@
 
 [DEXKOUS](https://fred.stlouisfed.org/series/DEXKOUS), [DEXUSEU](https://fred.stlouisfed.org/series/DEXUSEU), [DEXJPUS](https://fred.stlouisfed.org/series/DEXJPUS). 원출처: 미국 연방준비제도 H.10, 제공: FRED. 자세한 수집·정제 기록은 [DATA_CHECK.md](DATA_CHECK.md)에 있다.
 
-최종 인사이트와 결론·회고는 [REPORT.md](REPORT.md), 제출 안내와 설명 연습은 [SUBMISSION.md](SUBMISSION.md)에 정리했다.
+최종 인사이트와 결론·회고는 [REPORT.md](REPORT.md)에 정리했다.

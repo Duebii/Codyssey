@@ -1,0 +1,15 @@
+date,currency,rate,change_pct,previous_date,elapsed_calendar_days,action
+2020-03-09,JPY100_KRW,1174.161139289895,3.7339845458211673,2020-03-06,3,retain; statistical flag alone does not establish an error
+2022-10-21,JPY100_KRW,984.1544243252476,2.9917058544516317,2022-10-20,1,retain; statistical flag alone does not establish an error
+2022-11-10,JPY100_KRW,971.5897869939342,4.039159885088828,2022-11-09,1,retain; statistical flag alone does not establish an error
+2022-11-14,USD_KRW,1327.38,-3.6398745571752045,2022-11-10,4,retain; statistical flag alone does not establish an error
+2022-12-20,JPY100_KRW,984.4446139761977,3.464615650064262,2022-12-19,1,retain; statistical flag alone does not establish an error
+2023-03-23,USD_KRW,1278.93,-2.18508604206501,2023-03-22,1,retain; statistical flag alone does not establish an error
+2023-12-07,JPY100_KRW,919.6877168632893,3.0755157259176436,2023-12-06,1,retain; statistical flag alone does not establish an error
+2025-04-11,USD_KRW,1418.79,-2.177375428338968,2025-04-10,1,retain; statistical flag alone does not establish an error
+2025-05-02,USD_KRW,1398.89,-2.691328482588784,2025-05-01,1,retain; statistical flag alone does not establish an error
+2025-12-24,EUR_KRW,1700.5843599999998,-2.5204792565157397,2025-12-23,1,retain; statistical flag alone does not establish an error
+2025-12-24,USD_KRW,1443.62,-2.553579263559358,2025-12-23,1,retain; statistical flag alone does not establish an error
+2026-03-03,EUR_KRW,1723.89024,2.421924155182187,2026-03-02,1,retain; statistical flag alone does not establish an error
+2026-03-03,JPY100_KRW,942.1015917306107,3.043588460714375,2026-03-02,1,retain; statistical flag alone does not establish an error
+2026-03-03,USD_KRW,1485.6,3.180997360744553,2026-03-02,1,retain; statistical flag alone does not establish an error

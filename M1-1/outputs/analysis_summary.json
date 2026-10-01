@@ -1,0 +1,60 @@
+{
+  "observations": 1666,
+  "first_date": "2020-01-02",
+  "last_date": "2026-08-31",
+  "monthly_periods": 80,
+  "moving_average_window_observations": 20,
+  "volatility_ddof": 1,
+  "metrics": {
+    "USD_KRW": {
+      "name": "달러",
+      "unit": "원 / 1달러",
+      "first_rate": 1157.95,
+      "last_rate": 1368.25,
+      "change_pct": 18.16140593289866,
+      "minimum": 1081.62,
+      "minimum_date": "2021-01-04",
+      "maximum": 1555.96,
+      "maximum_date": "2026-06-05",
+      "change_std_full_period": 0.5742639801359658,
+      "peak_volatility_month": "2022-11",
+      "peak_monthly_volatility_pct": 1.2118536432064406,
+      "peak_month_valid_changes": 20
+    },
+    "EUR_KRW": {
+      "name": "유로",
+      "unit": "원 / 1유로",
+      "first_rate": 1292.96697,
+      "last_rate": 1589.496025,
+      "change_pct": 22.934000781164585,
+      "minimum": 1282.255296,
+      "minimum_date": "2020-02-13",
+      "maximum": 1794.488668,
+      "maximum_date": "2026-06-05",
+      "change_std_full_period": 0.5878163043726017,
+      "peak_volatility_month": "2020-03",
+      "peak_monthly_volatility_pct": 1.240791979923254,
+      "peak_month_valid_changes": 22
+    },
+    "JPY100_KRW": {
+      "name": "엔화",
+      "unit": "원 / 100엔",
+      "first_rate": 1067.9240062713,
+      "last_rate": 856.5481407287,
+      "change_pct": -19.793156095500407,
+      "minimum": 855.3886106474,
+      "minimum_date": "2024-07-10",
+      "maximum": 1174.1611392899,
+      "maximum_date": "2020-03-09",
+      "change_std_full_period": 0.714774933979086,
+      "peak_volatility_month": "2020-03",
+      "peak_monthly_volatility_pct": 1.5817653932400624,
+      "peak_month_valid_changes": 22
+    }
+  },
+  "versions": {
+    "matplotlib": "3.11.2",
+    "pandas": "3.0.1",
+    "numpy": "2.3.5"
+  }
+}

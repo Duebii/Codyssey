@@ -1,0 +1,103 @@
+{
+  "period": [
+    "2020-01-01",
+    "2026-08-31"
+  ],
+  "series": {
+    "DEXKOUS": {
+      "rows": 1738,
+      "valid": 1666,
+      "missing": 72,
+      "duplicates": 0,
+      "sorted": true,
+      "invalid_numeric": 0,
+      "nonpositive_or_infinite": 0,
+      "outside_period": 0,
+      "sha256_matches": true,
+      "first_date": "2020-01-02",
+      "last_date": "2026-08-31"
+    },
+    "DEXUSEU": {
+      "rows": 1738,
+      "valid": 1666,
+      "missing": 72,
+      "duplicates": 0,
+      "sorted": true,
+      "invalid_numeric": 0,
+      "nonpositive_or_infinite": 0,
+      "outside_period": 0,
+      "sha256_matches": true,
+      "first_date": "2020-01-02",
+      "last_date": "2026-08-31"
+    },
+    "DEXJPUS": {
+      "rows": 1738,
+      "valid": 1666,
+      "missing": 72,
+      "duplicates": 0,
+      "sorted": true,
+      "invalid_numeric": 0,
+      "nonpositive_or_infinite": 0,
+      "outside_period": 0,
+      "sha256_matches": true,
+      "first_date": "2020-01-02",
+      "last_date": "2026-08-31"
+    }
+  },
+  "same_missing_dates": true,
+  "common_valid_rows": 1666,
+  "explicit_missing_rows": 72,
+  "missing_calendar_matches": 69,
+  "missing_without_calendar_match": [
+    "2020-11-27",
+    "2020-12-24",
+    "2021-01-20"
+  ],
+  "absent_weekdays": [
+    "2020-01-01"
+  ],
+  "weekends_absent": 696,
+  "calendar_label_source": "pandas.tseries.holiday.USFederalHolidayCalendar",
+  "outlier_rule": "observation-to-observation percentage change outside Q1-3*IQR or Q3+3*IQR; retain all candidates",
+  "outlier_thresholds": {
+    "USD_KRW": {
+      "lower_change_pct": -2.1563856838695328,
+      "upper_change_pct": 2.2251892772267134,
+      "flagged": 6
+    },
+    "EUR_KRW": {
+      "lower_change_pct": -2.3644708303715456,
+      "upper_change_pct": 2.3882746897221474,
+      "flagged": 2
+    },
+    "JPY100_KRW": {
+      "lower_change_pct": -2.8922846273799374,
+      "upper_change_pct": 2.8574412302752927,
+      "flagged": 6
+    }
+  },
+  "decimal_samples": [
+    {
+      "date": "2020-01-02",
+      "USD_KRW": 1157.95,
+      "EUR_KRW": 1292.96697,
+      "JPY100_KRW": 1067.924006271327
+    },
+    {
+      "date": "2023-05-03",
+      "USD_KRW": 1337.94,
+      "EUR_KRW": 1478.289906,
+      "JPY100_KRW": 988.7960978493829
+    },
+    {
+      "date": "2026-08-31",
+      "USD_KRW": 1368.25,
+      "EUR_KRW": 1589.496025,
+      "JPY100_KRW": 856.5481407286841
+    }
+  ],
+  "versions": {
+    "pandas": "3.0.1",
+    "numpy": "2.3.5"
+  }
+}

@@ -132,14 +132,14 @@ def main():
     (OUT / "data_quality.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
 
     lines = ["# 데이터 점검 및 정제 기록", "",
-             "분석 범위: 2020-01-01~2026-08-31. 점검 대상은 공식 FRED에서 수집한 세 원본 CSV이다.", "",
+             "분석 범위: 2020-01-01–2026-08-31. 점검 대상은 공식 FRED에서 수집한 세 원본 CSV이다.", "",
              "## 1. 원본 점검", "",
              "| 자료 | 행 수 | 유효 값 | 결측치 | 날짜 중복 | 날짜순 정렬 | 잘못된 숫자 |",
              "|---|---:|---:|---:|---:|---|---:|"]
     for sid, a in audits.items():
         lines.append(f"| {sid} | {a['rows']:,} | {a['valid']:,} | {a['missing']} | {a['duplicates']} | {'예' if a['sorted'] else '아니오'} | {a['invalid_numeric'] + a['nonpositive_or_infinite']} |")
     lines += ["", "- 세 원본 모두 수집 기록의 SHA-256 해시와 일치한다. 복사 과정에서 값이 바뀌지 않았다.",
-              f"- 실제 원본 날짜 범위: {valid.index.min():%Y-%m-%d}~{valid.index.max():%Y-%m-%d}.",
+              f"- 실제 원본 날짜 범위: {valid.index.min():%Y-%m-%d}–{valid.index.max():%Y-%m-%d}.",
               f"- 세 자료의 결측 날짜 동일 여부: {'동일' if same_missing else '다름'}.",
               "", "## 2. 결측치와 비관측일", "",
               f"원본에 존재하지만 값이 비어 있는 날짜는 {len(unavailable)}개다. 주말처럼 원본에 행 자체가 없는 날과 구분한다.",
@@ -148,7 +148,7 @@ def main():
               f"원본 결측 날짜 중 미국 연방 공휴일 달력과 일치하는 날짜는 {calendar_matches}개, 일치하지 않는 날짜는 {len(unavailable)-calendar_matches}개다.",
               f"달력과 일치하지 않는 결측 날짜: {', '.join(summary['missing_without_calendar_match']) or '없음'}.",
               "달력 일치는 원인 추정의 근거이며, 각 날짜의 결측 원인을 확정한 결과가 아니다. 일치하지 않는 날짜의 원인은 미확인으로 남긴다.",
-              "연준의 [공식 휴일 안내](https://www.federalreserve.gov/aboutthefed/k8.htm)는 대체휴일과 연준 이사회/은행의 휴일 차이를 설명한다. 2026~2030년 안내이므로 과거 모든 결측 원인을 설명하는 자료로 사용하지 않는다.",
+              "연준의 [공식 휴일 안내](https://www.federalreserve.gov/aboutthefed/k8.htm)는 대체휴일과 연준 이사회/은행의 휴일 차이를 설명한다. 2026–2030년 안내이므로 과거 모든 결측 원인을 설명하는 자료로 사용하지 않는다.",
               "", "**처리:** 원본은 그대로 보존하고 세 자료가 모두 유효한 날짜만 분석에 사용한다. 결측치를 0으로 바꾸거나 전날 값으로 채우지 않는다. 채우면 인위적인 0% 변화가 생겨 변동성을 작게 보이게 할 수 있다.",
               f"최종 분석용 데이터는 {len(rates):,}행이며, 각 통화에 동일한 날짜를 적용한다. 제외 날짜는 [excluded_dates.csv](excluded_dates.csv)에 기록했다.",
               "", "## 3. 단위 환산 및 계산 검증", "",

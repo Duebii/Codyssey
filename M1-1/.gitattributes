@@ -1,0 +1,2 @@
+# Preserve the downloaded CSV bytes so collection SHA-256 hashes survive checkout.
+data/raw/*.csv -text

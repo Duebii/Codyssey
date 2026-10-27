@@ -166,7 +166,7 @@
 
 `render.yaml`, `vercel.json`과 [배포 안내](docs/DEPLOYMENT.md)를 준비했습니다. 프로덕션 빌드에서 실제 HTTPS API 주소를 요구하고 비공개 파일이 섞인 출력을 차단합니다. Render 기본 외부 주소를 설정에 반영하고 전체 Python 221개·Node 14개 시험을 통과했습니다. 서비스 생성·배포 검증 전에는 완료로 표시하지 않습니다.
 
-- [ ] GitHub에 검토한 프로젝트 코드를 업로드한다.
+- [x] GitHub에 검토한 프로젝트 코드를 업로드한다 (`Duebii/Codyssey`, `M1-2/`, 최초 커밋 `70909ad`).
 - [ ] Render에 FastAPI 백엔드를 배포하고 실행 명령·환경변수를 설정한다.
 - [ ] 백엔드 배포 URL의 Swagger UI(`/docs`)를 확인한다.
 - [ ] Vercel에 프론트엔드를 배포한다.

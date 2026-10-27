@@ -1,0 +1,33 @@
+# Local settings and credentials
+.env
+.env.*
+!.env.example
+*service-account*.json
+*service_account*.json
+*firebase-adminsdk*.json
+credentials.json
+.secrets/
+*.pem
+*.key
+
+# Python and generated local state
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.local/
+.tmp/
+
+# Frontend build output
+node_modules/
+dist/
+.vercel/
+.taste-skill/
+.impeccable/questions/
+.impeccable/mocks/
+.impeccable/review/
+
+# Editor and OS files
+.DS_Store
+Thumbs.db

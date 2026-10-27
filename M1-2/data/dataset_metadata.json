@@ -1,0 +1,19 @@
+{
+  "dataset_name": "김실장 가상 작업 기록 v1",
+  "source": "synthetic",
+  "real_personal_data": false,
+  "purpose": "M1-2 미션 개발 및 시연",
+  "seed": 1021,
+  "start": "2026-08-26",
+  "end": "2026-10-20",
+  "expected_count": 150,
+  "unit": "minutes",
+  "timezone": "Asia/Seoul",
+  "date_meaning": "가상 사용자가 작업을 수행한 한국 기준 날짜",
+  "patterns": [
+    "자료 취합: 주차가 지날수록 소요 시간 증가",
+    "제안서 작성: 예상 40분을 반복적으로 초과",
+    "후반 4주: 창업 검증 준비 대신 지원서 작성에 시간을 배정"
+  ],
+  "submission_policy": "과제 제공자에게 가상 데이터 제출 허용 여부 확인 필요"
+}

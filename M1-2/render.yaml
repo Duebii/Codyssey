@@ -1,0 +1,33 @@
+# Blueprint path: M1-2/render.yaml (repository: Duebii/Codyssey).
+services:
+  - type: web
+    name: m1-2-kim-manager
+    runtime: python
+    plan: free
+    region: singapore
+    rootDir: M1-2
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeployTrigger: "off"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.14
+      - key: APP_ENV
+        value: production
+      - key: AI_PROVIDER
+        value: codyssey
+      - key: OPENAI_MODEL
+        value: gpt-5-mini
+      - key: OPENAI_MAX_OUTPUT_TOKENS
+        value: "6000"
+      - key: OPENAI_TIMEOUT_SECONDS
+        value: "60"
+      - key: OPENAI_REASONING_EFFORT
+        value: omit
+      - key: ALLOWED_ORIGINS
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false

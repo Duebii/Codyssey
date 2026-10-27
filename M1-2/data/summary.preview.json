@@ -1,0 +1,671 @@
+{
+  "source": "synthetic",
+  "description": "김실장 개발용 가상 기록의 분석 예시. 실제 사용자의 업무나 성과를 나타내지 않음.",
+  "period": {
+    "start": "2026-08-26",
+    "end": "2026-10-20",
+    "calendar_days": 56
+  },
+  "as_of": "2026-10-20",
+  "count": 150,
+  "recorded_days": 40,
+  "unrecorded_days": 16,
+  "total_minutes": 6524,
+  "average_minutes_per_record": 43.49,
+  "min_minutes": 17,
+  "max_minutes": 77,
+  "average_minutes_per_recorded_day": 163.1,
+  "categories": [
+    {
+      "category": "창업",
+      "count": 35,
+      "total_minutes": 1400,
+      "share_percent": 21.46
+    },
+    {
+      "category": "취업",
+      "count": 45,
+      "total_minutes": 2146,
+      "share_percent": 32.89
+    },
+    {
+      "category": "프리랜서",
+      "count": 70,
+      "total_minutes": 2978,
+      "share_percent": 45.65
+    }
+  ],
+  "recent_trend": {
+    "basis": "최근 기록일 기준 동일 길이의 7일 구간 총 소요 시간 비교",
+    "recent_start": "2026-10-14",
+    "recent_end": "2026-10-20",
+    "previous_start": "2026-10-07",
+    "previous_end": "2026-10-13",
+    "recent_record_count": 18,
+    "previous_record_count": 19,
+    "recent_total_minutes": 868,
+    "previous_total_minutes": 921,
+    "change_percent": -5.75,
+    "threshold_percent": 5,
+    "direction": "decrease"
+  },
+  "daily": [
+    {
+      "date": "2026-08-26",
+      "record_count": 4,
+      "total_minutes": 195,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-08-27",
+      "record_count": 4,
+      "total_minutes": 117,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-08-28",
+      "record_count": 4,
+      "total_minutes": 176,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-08-29",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-08-30",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-08-31",
+      "record_count": 3,
+      "total_minutes": 84,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-01",
+      "record_count": 4,
+      "total_minutes": 207,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-02",
+      "record_count": 4,
+      "total_minutes": 119,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-03",
+      "record_count": 4,
+      "total_minutes": 186,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-04",
+      "record_count": 3,
+      "total_minutes": 86,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-05",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-06",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-07",
+      "record_count": 4,
+      "total_minutes": 194,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-08",
+      "record_count": 4,
+      "total_minutes": 117,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-09",
+      "record_count": 4,
+      "total_minutes": 183,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-10",
+      "record_count": 3,
+      "total_minutes": 85,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-11",
+      "record_count": 4,
+      "total_minutes": 203,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-12",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-13",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-14",
+      "record_count": 4,
+      "total_minutes": 120,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-15",
+      "record_count": 4,
+      "total_minutes": 182,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-16",
+      "record_count": 3,
+      "total_minutes": 97,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-17",
+      "record_count": 4,
+      "total_minutes": 218,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-18",
+      "record_count": 4,
+      "total_minutes": 120,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-19",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-20",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-21",
+      "record_count": 4,
+      "total_minutes": 197,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-22",
+      "record_count": 3,
+      "total_minutes": 99,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-23",
+      "record_count": 4,
+      "total_minutes": 202,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-24",
+      "record_count": 4,
+      "total_minutes": 166,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-25",
+      "record_count": 4,
+      "total_minutes": 203,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-26",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-27",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-09-28",
+      "record_count": 3,
+      "total_minutes": 102,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-29",
+      "record_count": 4,
+      "total_minutes": 221,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-09-30",
+      "record_count": 4,
+      "total_minutes": 161,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-01",
+      "record_count": 4,
+      "total_minutes": 199,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-02",
+      "record_count": 3,
+      "total_minutes": 109,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-03",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-10-04",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-10-05",
+      "record_count": 4,
+      "total_minutes": 236,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-06",
+      "record_count": 4,
+      "total_minutes": 151,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-07",
+      "record_count": 4,
+      "total_minutes": 240,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-08",
+      "record_count": 3,
+      "total_minutes": 103,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-09",
+      "record_count": 4,
+      "total_minutes": 210,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-10",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-10-11",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-10-12",
+      "record_count": 4,
+      "total_minutes": 155,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-13",
+      "record_count": 4,
+      "total_minutes": 213,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-14",
+      "record_count": 3,
+      "total_minutes": 116,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-15",
+      "record_count": 4,
+      "total_minutes": 237,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-16",
+      "record_count": 4,
+      "total_minutes": 163,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-17",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-10-18",
+      "record_count": 0,
+      "total_minutes": null,
+      "status": "unrecorded"
+    },
+    {
+      "date": "2026-10-19",
+      "record_count": 4,
+      "total_minutes": 233,
+      "status": "recorded"
+    },
+    {
+      "date": "2026-10-20",
+      "record_count": 3,
+      "total_minutes": 119,
+      "status": "recorded"
+    }
+  ],
+  "weekly": [
+    {
+      "start": "2026-08-26",
+      "end": "2026-09-01",
+      "record_count": 19,
+      "total_minutes": 779,
+      "category_minutes": {
+        "창업": 236,
+        "취업": 194,
+        "프리랜서": 349
+      }
+    },
+    {
+      "start": "2026-09-02",
+      "end": "2026-09-08",
+      "record_count": 19,
+      "total_minutes": 702,
+      "category_minutes": {
+        "창업": 234,
+        "취업": 158,
+        "프리랜서": 310
+      }
+    },
+    {
+      "start": "2026-09-09",
+      "end": "2026-09-15",
+      "record_count": 19,
+      "total_minutes": 773,
+      "category_minutes": {
+        "창업": 282,
+        "취업": 120,
+        "프리랜서": 371
+      }
+    },
+    {
+      "start": "2026-09-16",
+      "end": "2026-09-22",
+      "record_count": 18,
+      "total_minutes": 731,
+      "category_minutes": {
+        "창업": 236,
+        "취업": 176,
+        "프리랜서": 319
+      }
+    },
+    {
+      "start": "2026-09-23",
+      "end": "2026-09-29",
+      "record_count": 19,
+      "total_minutes": 894,
+      "category_minutes": {
+        "창업": 81,
+        "취업": 414,
+        "프리랜서": 399
+      }
+    },
+    {
+      "start": "2026-09-30",
+      "end": "2026-10-06",
+      "record_count": 19,
+      "total_minutes": 856,
+      "category_minutes": {
+        "창업": 83,
+        "취업": 394,
+        "프리랜서": 379
+      }
+    },
+    {
+      "start": "2026-10-07",
+      "end": "2026-10-13",
+      "record_count": 19,
+      "total_minutes": 921,
+      "category_minutes": {
+        "창업": 130,
+        "취업": 339,
+        "프리랜서": 452
+      }
+    },
+    {
+      "start": "2026-10-14",
+      "end": "2026-10-20",
+      "record_count": 18,
+      "total_minutes": 868,
+      "category_minutes": {
+        "창업": 118,
+        "취업": 351,
+        "프리랜서": 399
+      }
+    }
+  ],
+  "task_statistics": [
+    {
+      "task_name": "고객 커뮤니케이션",
+      "category": "프리랜서",
+      "count": 10,
+      "total_minutes": 239,
+      "average_minutes": 23.9,
+      "estimated_total_minutes": 200,
+      "average_overrun_minutes": 3.9,
+      "actual_to_estimated_ratio": 1.195
+    },
+    {
+      "task_name": "시장 조사",
+      "category": "창업",
+      "count": 10,
+      "total_minutes": 505,
+      "average_minutes": 50.5,
+      "estimated_total_minutes": 450,
+      "average_overrun_minutes": 5.5,
+      "actual_to_estimated_ratio": 1.122
+    },
+    {
+      "task_name": "아이디어 검증 준비",
+      "category": "창업",
+      "count": 15,
+      "total_minutes": 581,
+      "average_minutes": 38.73,
+      "estimated_total_minutes": 525,
+      "average_overrun_minutes": 3.73,
+      "actual_to_estimated_ratio": 1.107
+    },
+    {
+      "task_name": "아이디어 정리",
+      "category": "창업",
+      "count": 10,
+      "total_minutes": 314,
+      "average_minutes": 31.4,
+      "estimated_total_minutes": 300,
+      "average_overrun_minutes": 1.4,
+      "actual_to_estimated_ratio": 1.047
+    },
+    {
+      "task_name": "자료 취합",
+      "category": "프리랜서",
+      "count": 40,
+      "total_minutes": 1367,
+      "average_minutes": 34.17,
+      "estimated_total_minutes": 800,
+      "average_overrun_minutes": 14.18,
+      "actual_to_estimated_ratio": 1.709
+    },
+    {
+      "task_name": "제안서 작성",
+      "category": "프리랜서",
+      "count": 20,
+      "total_minutes": 1372,
+      "average_minutes": 68.6,
+      "estimated_total_minutes": 800,
+      "average_overrun_minutes": 28.6,
+      "actual_to_estimated_ratio": 1.715
+    },
+    {
+      "task_name": "지원서 작성",
+      "category": "취업",
+      "count": 15,
+      "total_minutes": 809,
+      "average_minutes": 53.93,
+      "estimated_total_minutes": 750,
+      "average_overrun_minutes": 3.93,
+      "actual_to_estimated_ratio": 1.079
+    },
+    {
+      "task_name": "채용 공고 조사",
+      "category": "취업",
+      "count": 20,
+      "total_minutes": 677,
+      "average_minutes": 33.85,
+      "estimated_total_minutes": 600,
+      "average_overrun_minutes": 3.85,
+      "actual_to_estimated_ratio": 1.128
+    },
+    {
+      "task_name": "포트폴리오 수정",
+      "category": "취업",
+      "count": 10,
+      "total_minutes": 660,
+      "average_minutes": 66.0,
+      "estimated_total_minutes": 600,
+      "average_overrun_minutes": 6.0,
+      "actual_to_estimated_ratio": 1.1
+    }
+  ],
+  "repeat_review_candidates": [
+    {
+      "task_name": "제안서 작성",
+      "category": "프리랜서",
+      "count": 20,
+      "total_minutes": 1372,
+      "average_minutes": 68.6,
+      "estimated_total_minutes": 800,
+      "average_overrun_minutes": 28.6,
+      "actual_to_estimated_ratio": 1.715
+    },
+    {
+      "task_name": "자료 취합",
+      "category": "프리랜서",
+      "count": 40,
+      "total_minutes": 1367,
+      "average_minutes": 34.17,
+      "estimated_total_minutes": 800,
+      "average_overrun_minutes": 14.18,
+      "actual_to_estimated_ratio": 1.709
+    },
+    {
+      "task_name": "지원서 작성",
+      "category": "취업",
+      "count": 15,
+      "total_minutes": 809,
+      "average_minutes": 53.93,
+      "estimated_total_minutes": 750,
+      "average_overrun_minutes": 3.93,
+      "actual_to_estimated_ratio": 1.079
+    },
+    {
+      "task_name": "채용 공고 조사",
+      "category": "취업",
+      "count": 20,
+      "total_minutes": 677,
+      "average_minutes": 33.85,
+      "estimated_total_minutes": 600,
+      "average_overrun_minutes": 3.85,
+      "actual_to_estimated_ratio": 1.128
+    },
+    {
+      "task_name": "포트폴리오 수정",
+      "category": "취업",
+      "count": 10,
+      "total_minutes": 660,
+      "average_minutes": 66.0,
+      "estimated_total_minutes": 600,
+      "average_overrun_minutes": 6.0,
+      "actual_to_estimated_ratio": 1.1
+    },
+    {
+      "task_name": "아이디어 검증 준비",
+      "category": "창업",
+      "count": 15,
+      "total_minutes": 581,
+      "average_minutes": 38.73,
+      "estimated_total_minutes": 525,
+      "average_overrun_minutes": 3.73,
+      "actual_to_estimated_ratio": 1.107
+    },
+    {
+      "task_name": "시장 조사",
+      "category": "창업",
+      "count": 10,
+      "total_minutes": 505,
+      "average_minutes": 50.5,
+      "estimated_total_minutes": 450,
+      "average_overrun_minutes": 5.5,
+      "actual_to_estimated_ratio": 1.122
+    },
+    {
+      "task_name": "아이디어 정리",
+      "category": "창업",
+      "count": 10,
+      "total_minutes": 314,
+      "average_minutes": 31.4,
+      "estimated_total_minutes": 300,
+      "average_overrun_minutes": 1.4,
+      "actual_to_estimated_ratio": 1.047
+    },
+    {
+      "task_name": "고객 커뮤니케이션",
+      "category": "프리랜서",
+      "count": 10,
+      "total_minutes": 239,
+      "average_minutes": 23.9,
+      "estimated_total_minutes": 200,
+      "average_overrun_minutes": 3.9,
+      "actual_to_estimated_ratio": 1.195
+    }
+  ],
+  "limitations": [
+    "시연을 위해 설계한 패턴이므로 실제 사용자에 대한 결론으로 사용할 수 없음.",
+    "기록이 없는 날은 미기록이며 0분 근무나 휴식으로 단정하지 않음.",
+    "반복 빈도와 소요 시간만으로 자동화 가능성이나 절감 효과를 확정하지 않음.",
+    "전략 상담에는 현재 목표·마감·중요도·선행 작업·가능 시간을 추가로 확인해야 함.",
+    "데이터 날짜가 고정되어 있으며 최근 추세는 오늘이 아닌 마지막 기록일을 기준으로 계산함."
+  ]
+}

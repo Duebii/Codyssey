@@ -1,0 +1,8 @@
+# Runtime dependency ranges. requirements.txt records the installed versions.
+fastapi>=0.115,<1
+uvicorn>=0.30,<1
+firebase-admin>=6.6,<8
+openai>=2,<3
+python-dotenv>=1,<2
+pydantic>=2.10,<3
+tzdata>=2025.1

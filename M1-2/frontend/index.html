@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#edf3f8">
+  <meta name="description" content="작업 기록을 바탕으로 우선순위, 실행 전략과 자동화 방법을 함께 정하는 김실장.">
+  <title>김실장 · 나의 업무 전략 비서</title>
+  <link rel="icon" href="./mark.svg?v=20261027a" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css?v=20261027a">
+  <script src="./config.js"></script>
+  <script type="module" src="./app.js?v=20261027a"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문으로 건너뛰기</a>
+  <aside class="sidebar">
+    <a class="brand" href="#chat" aria-label="김실장 상담 홈"><img src="./mark.svg?v=20261027a" alt="" width="32" height="32"><span>김실장<small>나의 업무 전략 비서</small></span></a>
+    <nav aria-label="주요 메뉴">
+      <a href="#chat" data-nav="chat"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 4h14v12H9l-4 4V4Z"/><path d="M9 8h6m-6 4h4"/></svg>김실장 상담</a>
+      <a href="#records" data-nav="records"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 4h12v16H6zM9 8h6m-6 4h6m-6 4h4"/></svg>작업 기록</a>
+      <a href="#summary" data-nav="summary"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 4v16h16M8 16v-4m5 4V7m5 9v-6"/></svg>기록 요약</a>
+      <a href="#history" data-nav="history"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 6M4 5v6h6m2-4v5l3 2"/></svg>이전 상담</a>
+    </nav>
+    <div class="sidebar-bottom"><span class="demo-label">시연용 가상 데이터</span><p>기록에서 힌트를 찾고,<br>다음 행동을 함께 정해요.</p><a id="docs-link" href="http://127.0.0.1:8000/docs" target="_blank" rel="noopener">API 문서 <span aria-hidden="true">↗</span></a></div>
+  </aside>
+  <main id="main" tabindex="-1">
+    <div class="scope-line"><span>나의 작업실</span><span class="demo-label">시연용 가상 데이터</span></div>
+    <section id="view-chat" class="view" aria-labelledby="chat-heading">
+      <header class="page-heading"><div><h1 id="chat-heading" tabindex="-1">김실장 상담</h1><p id="chat-subtitle">무엇부터, 어떻게 할지 함께 정해요.</p></div><button id="new-chat" class="secondary chat-lock" type="button">새 상담</button></header>
+      <div class="chat-layout">
+        <div class="counsel-panel">
+          <div class="chat-toolbar"><label for="chat-mode">상담 종류</label><select id="chat-mode" class="chat-lock"><option value="strategy">우선순위·실행 전략</option><option value="automation">자동화 설계</option><option value="review">기록 돌아보기</option></select><span id="save-state" class="small muted">답변 후 자동 저장</span></div>
+          <div id="messages" class="messages" role="region" aria-label="상담 메시지" tabindex="0">
+            <div id="welcome" class="welcome"><img src="./mark.svg?v=20261027a" alt="" width="48" height="48"><h2>복잡한 일을,<br>시작할 수 있는 일로.</h2><p>하고 싶은 일과 지금의 고민을 들려주세요.<br>기록을 참고해 순서와 방법을 함께 찾을게요.</p><div class="starters"><button type="button" data-starter="오늘 해야 할 일이 여러 개인데 무엇부터 하면 좋을까요?" data-mode="strategy">우선순위 정하기 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button><button type="button" data-starter="반복 작업 중 자동화 후보와 작은 검증 방법을 함께 찾아주세요." data-mode="automation">반복 업무 줄이기 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button><button type="button" data-starter="저장된 가상 작업 기록의 최근 변화와 확인할 점을 정리해 주세요." data-mode="review">기록 돌아보기 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 12h14m-5-5 5 5-5 5"/></svg></button></div></div>
+          </div>
+          <button type="button" id="latest-message" class="secondary latest-message" hidden>최근 메시지로 이동</button>
+          <div id="chat-progress" role="status" class="progress" hidden><span class="spinner" aria-hidden="true"></span><span id="chat-progress-text">김실장이 기록을 살펴보고 있어요…</span></div>
+          <div id="chat-error" class="inline-feedback" role="alert" hidden></div>
+          <form id="chat-form" class="composer">
+            <details id="context-details"><summary>현재 상황 <span id="context-summary">선택 입력</span></summary><fieldset id="context-fields" class="chat-lock-fieldset"><legend class="sr-only">현재 상담 조건</legend><p class="small muted">바꾼 조건만 다음 질문과 함께 전달해요. 말로 알려주셔도 괜찮아요.</p><div class="form-grid"><label>이번 목표<input id="context-goal" maxlength="500" placeholder="예: 지원서 초안 완성"></label><label>가능 시간 <span class="muted">(분)</span><input id="context-time" type="number" min="1" max="1440" step="1" placeholder="예: 60"></label></div><label>제약·참고 사항<textarea id="context-constraints" rows="2" maxlength="1000" placeholder="예: 오늘은 자료 정리까지만 할 수 있어요."></textarea></label><div class="section-inline"><span>오늘 할 일 <span class="small muted">최대 10개</span></span><button type="button" id="add-task" class="text-button">할 일 추가</button></div><div id="context-tasks"></div><p class="small muted">마감과 중요도는 직접 알려주신 내용을 기준으로 해요.</p></fieldset></details>
+            <label class="sr-only" for="chat-input">김실장에게 질문</label><textarea id="chat-input" rows="3" maxlength="4000" required placeholder="김실장님, 지금 이런 고민이 있어요…"></textarea><div class="composer-footer"><span class="small muted">Ctrl / ⌘ + Enter로 전송</span><button id="send-chat" type="submit" class="primary">김실장에게 물어보기 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m5 12 7-7 7 7M12 5v15"/></svg></button></div>
+          </form>
+        </div>
+        <aside class="reference-rail" aria-label="상담 참고 자료"><section><div class="section-inline"><h2>김실장이 참고하는 기록</h2><button id="refresh-reference" type="button" class="icon-button" aria-label="참고 기록 새로고침"><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M19 8a8 8 0 1 0 1 7M20 3v6h-6"/></svg></button></div><div id="reference-summary" class="reference-summary"><p class="muted">기록을 불러오고 있어요…</p></div><a href="#summary" class="arrow-link">기록 요약 살펴보기 <span aria-hidden="true">↗</span></a></section><section class="how-to"><h2>이렇게 도와드려요</h2><dl><dt>우선순위</dt><dd>목표·마감·선행 작업을 함께 봐요.</dd><dt>실행 전략</dt><dd>완료 기준부터 첫 행동과 대안까지.</dd><dt>자동화 설계</dt><dd>줄일 반복과 사람이 확인할 일을 나눠요.</dd></dl><p class="small muted">자동화는 방법을 제안해요.<br>외부 도구를 직접 실행하지 않아요.</p></section><section><div class="section-inline"><h2>최근 상담</h2><a href="#history" class="small">전체 보기</a></div><div id="recent-conversations"><p class="small muted">이전 상담을 불러오고 있어요…</p></div></section></aside>
+      </div>
+    </section>
+    <section id="view-records" class="view" hidden aria-labelledby="records-heading"><header class="page-heading"><div><h1 id="records-heading" tabindex="-1">작업 기록</h1><p>끝낸 작업의 시간을 남기면, 다음 전략의 근거가 돼요.</p></div><button id="refresh-records" class="secondary" type="button">목록 새로고침</button></header><div class="records-layout"><section class="panel record-list-panel"><div class="section-inline"><h2>저장된 작업 <span id="record-total" class="muted"></span></h2><button type="button" id="jump-record-form" class="text-button">기록 추가</button></div><div id="record-list" aria-live="polite"></div><div id="record-pagination" class="pagination"></div></section><section class="panel record-editor"><h2 id="record-form-heading">작업 기록 추가</h2><p class="small muted">여기에 입력한 기록도 가상 데이터로 저장돼요.</p><form id="record-form"><fieldset id="record-fields"><legend class="sr-only">작업 기록 입력</legend><label>작업 날짜<input name="date" type="date" required></label><label>작업명<input name="task_name" maxlength="80" required placeholder="예: 지원서 작성"></label><label>분야<select name="category"><option>프리랜서</option><option>취업</option><option>창업</option></select></label><div class="form-grid"><label>실제 시간 (분)<input name="value" type="number" min="1" max="1440" step="1" required placeholder="60"></label><label>예상 시간 (분)<input name="estimated_minutes" type="number" min="1" max="1440" step="1" placeholder="선택"></label></div><label>메모 <span class="muted">(선택)</span><textarea name="memo" rows="3" maxlength="2000" placeholder="어떤 작업을 했나요?"></textarea></label></fieldset><div id="record-feedback" class="inline-feedback" role="status" hidden></div><div class="form-actions"><button id="cancel-record-edit" class="secondary" type="button" hidden>수정 취소</button><button id="save-record" class="primary" type="submit">기록 저장</button></div></form></section></div></section>
+    <section id="view-summary" class="view" hidden aria-labelledby="summary-heading"><header class="page-heading"><div><h1 id="summary-heading" tabindex="-1">기록 요약</h1><p>기록에서 보이는 변화와, 더 나아질 여지를 살펴봐요.</p></div><button id="refresh-summary" class="secondary" type="button">요약 새로고침</button></header><div id="summary-content" aria-live="polite"></div></section>
+    <section id="view-history" class="view" hidden aria-labelledby="history-heading"><header class="page-heading"><div><h1 id="history-heading" tabindex="-1">이전 상담</h1><p>그때의 목표와 계획부터 이어서 이야기해요.</p></div><button id="refresh-history" class="secondary chat-lock" type="button">목록 새로고침</button></header><section class="panel history-panel"><div class="section-inline"><h2>저장된 상담 <span id="history-total" class="muted"></span></h2><span class="small muted">마지막 대화 순</span></div><div id="history-list" aria-live="polite"></div><div id="history-pagination" class="pagination"></div></section></section>
+    <footer class="app-footer">M1-2 · 김실장 <span>기록은 힌트, 결정은 함께.</span></footer>
+  </main>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <div id="chat-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title" aria-describedby="confirm-description"><form method="dialog"><h2 id="confirm-title">삭제할까요?</h2><p id="confirm-description"></p><p id="confirm-error" class="inline-feedback" role="alert" hidden></p><div class="form-actions"><button id="confirm-cancel" value="cancel" class="secondary">취소</button><button id="confirm-delete" value="delete" class="danger">삭제하기</button></div></form></dialog>
+  <noscript>김실장은 JavaScript가 필요해요. 브라우저에서 JavaScript를 허용한 뒤 새로고침해 주세요.</noscript>
+</body>
+</html>

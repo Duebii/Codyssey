@@ -49,6 +49,8 @@ test('unavailable or corrupt tab storage degrades without crashing or trusting m
   assert.equal(blocked.available, false); assert.equal(blocked.write('new', draft()), false); assert.deepEqual(blocked.read(), draft());
   const storage = memoryStorage(); storage.setItem('kim-workspace-v1:api', '{broken');
   assert.equal(createDraftJournal(storage, 'api').read(), null);
+  storage.setItem('kim-workspace-v1:api', JSON.stringify({ version: 1, active: 'new', drafts: { new: { question: '손상된 초안', mode: 'strategy' } } }));
+  assert.equal(createDraftJournal(storage, 'api').read(), null);
   storage.setItem('kim-workspace-v1:api', JSON.stringify({ version: 1, active: 'new', drafts: { new: { ...draft(), context: { ...draft().context, tasks: [null] } } } }));
   assert.equal(createDraftJournal(storage, 'api').read(), null);
 });

@@ -34,7 +34,7 @@ export function createDraftJournal(storage, scope, backupStorage) {
     read(id = data.active) {
       const item = Object.hasOwn(data.drafts, id) ? data.drafts[id] : null;
       const tasks = item?.context?.tasks;
-      return item && typeof item.question === 'string' && Object.hasOwn(MODES, item.mode) && typeof item.context.goal === 'string' && typeof item.context.time === 'string' && typeof item.context.constraints === 'string' && Array.isArray(tasks) && tasks.length <= 10 && tasks.every(t => t && typeof t.id === 'string' && typeof t.title === 'string' && Array.isArray(t.depends_on)) ? copy(item) : null;
+      return item && typeof item.question === 'string' && Object.hasOwn(MODES, item.mode) && item.context && typeof item.context.goal === 'string' && typeof item.context.time === 'string' && typeof item.context.constraints === 'string' && Array.isArray(tasks) && tasks.length <= 10 && tasks.every(t => t && typeof t.id === 'string' && typeof t.title === 'string' && Array.isArray(t.depends_on)) ? copy(item) : null;
     },
     write(id, draft) { data.active = id; Object.defineProperty(data.drafts, id, { value: copy(draft), writable: true, enumerable: true, configurable: true }); return commit(); },
     entries() { return Object.keys(data.drafts).map(id => ({ id, draft: this.read(id) })).filter(x => x.draft); },

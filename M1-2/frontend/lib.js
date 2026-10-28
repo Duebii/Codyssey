@@ -1,6 +1,47 @@
 // Small pure helpers shared by the UI and its contract tests.
 export const EMPTY_CONTEXT = { goal: null, available_minutes: null, tasks: [], constraints: null };
 export const MODES = { strategy: "우선순위·실행 전략", automation: "자동화 설계", review: "기록 돌아보기" };
+// Tab-local working copy plus a browser backup for a discarded/recreated tab.
+// Never stores API keys or conversation messages; saved messages come from GET.
+// Keep raw field strings: incomplete numbers / whitespace are still the user's draft.
+export function createDraftJournal(storage, scope, backupStorage) {
+  const key = `kim-workspace-v1:${scope}`;
+  let data = { version: 1, active: 'new', drafts: {} };
+  let available = false;
+  let durable = false;
+  try {
+    let raw;
+    try { if (storage) { raw = storage.getItem(key); available = true; } } catch { /* Fall back to the durable copy. */ }
+    if (!raw && backupStorage) { raw = backupStorage.getItem(key); available = true; durable = Boolean(raw); }
+    if (!storage && !backupStorage) throw new Error('storage unavailable');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed.version === 1 && typeof parsed.active === 'string' && parsed.drafts && typeof parsed.drafts === 'object' && !Array.isArray(parsed.drafts)) data = parsed;
+    }
+  } catch { available = false; }
+  const copy = value => structuredClone(value);
+  function commit() {
+    available = false; durable = false;
+    const raw = JSON.stringify(data);
+    try { if (storage) { storage.setItem(key, raw); available = true; } } catch { /* Try backup independently. */ }
+    try { if (backupStorage) { backupStorage.setItem(key, raw); available = true; durable = true; } } catch { /* Keep the tab working copy. */ }
+    return available;
+  }
+  return {
+    get available() { return available; },
+    get durable() { return durable; },
+    get active() { return data.active; },
+    read(id = data.active) {
+      const item = Object.hasOwn(data.drafts, id) ? data.drafts[id] : null;
+      const tasks = item?.context?.tasks;
+      return item && typeof item.question === 'string' && Object.hasOwn(MODES, item.mode) && typeof item.context.goal === 'string' && typeof item.context.time === 'string' && typeof item.context.constraints === 'string' && Array.isArray(tasks) && tasks.length <= 10 && tasks.every(t => t && typeof t.id === 'string' && typeof t.title === 'string' && Array.isArray(t.depends_on)) ? copy(item) : null;
+    },
+    write(id, draft) { data.active = id; Object.defineProperty(data.drafts, id, { value: copy(draft), writable: true, enumerable: true, configurable: true }); return commit(); },
+    entries() { return Object.keys(data.drafts).map(id => ({ id, draft: this.read(id) })).filter(x => x.draft); },
+    remove(id) { delete data.drafts[id]; if (data.active === id) data.active = 'new'; return commit(); },
+    activate(id) { data.active = id; return commit(); }
+  };
+}
 export const number = (v, digits = 0) => v == null ? "—" : new Intl.NumberFormat("ko-KR", { maximumFractionDigits: digits }).format(v);
 export const minutes = (v) => v == null ? "—" : `${number(v, 2)}분`;
 export function dateTime(v) {
@@ -14,6 +55,12 @@ export function contextPatch(current, baseline) {
 export function rebaseContextDraft(latest, localPatch) {
   // Latest server values remain the baseline; only actual local edits win.
   return structuredClone({ ...latest, ...localPatch });
+}
+export function hasUnsentDraft(draft) {
+  if (draft.question.trim() || draft.pending) return true;
+  const raw = draft.context;
+  const current = { goal: raw.goal.trim() || null, available_minutes: raw.time === '' ? null : Number(raw.time), constraints: raw.constraints.trim() || null, tasks: raw.tasks };
+  return Object.keys(contextPatch(current, draft.baseline || EMPTY_CONTEXT)).length > 0;
 }
 export function validateContext(ctx) {
   if (ctx.available_minutes !== null && (!Number.isInteger(ctx.available_minutes) || ctx.available_minutes < 1 || ctx.available_minutes > 1440)) throw new Error("가능 시간은 1~1,440분 사이의 정수로 입력해 주세요.");

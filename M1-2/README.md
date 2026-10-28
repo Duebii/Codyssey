@@ -187,6 +187,8 @@ if (!(Test-Path .env)) { Copy-Item .env.example .env }
 
 2026-10-27 **Python 221개·Node 14개** 시험을 통과했습니다. Firestore 실제 CRUD·요약 갱신, GPT 답변·시간 변경·자동 저장, 배포 웹의 새로고침 후 불러오기를 별도로 확인했습니다. 자동 시험은 외부 서비스를 호출하지 않으며 실제 GPT 답변 품질을 보장하는 시험은 아닙니다.
 
+2026-10-28 상담 화면을 개선했습니다. 첫 질문 뒤 넓은 채팅 화면으로 전환하며, 질문·조건 초안과 마지막 상담을 같은 브라우저에서 복원합니다. 답변이 끝난 상담은 **이전 상담**에 자동 저장되고, 완료한 일의 **작업 기록**은 따로 등록합니다. 브라우저 초안과 서버 저장의 차이·한계는 [웹 화면 안내](docs/FRONTEND.md), 검증 결과는 [상담 복원 검증](docs/CHAT_RECOVERY_QA.md)을 참고하세요.
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest --basetemp=.tmp/pytest-readme
 node --test tests/frontend.test.mjs

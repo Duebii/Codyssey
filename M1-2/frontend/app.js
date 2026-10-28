@@ -1,9 +1,17 @@
-import { EMPTY_CONTEXT, MODES, number, minutes, dateTime, todayKST, contextPatch, rebaseContextDraft, validateContext, recordPayload, createApi } from './lib.js';
+import { EMPTY_CONTEXT, MODES, number, minutes, dateTime, todayKST, contextPatch, rebaseContextDraft, validateContext, recordPayload, createApi, createDraftJournal, hasUnsentDraft } from './lib.js?v=20261028b';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const clone = value => structuredClone(value);
 const state = { view: 'chat', summary: null, summaryError: null, conversation: null, baseline: clone(EMPTY_CONTEXT), taskDrafts: [], chatBusy: false, loadingConversation: false, recordBusy: false, editingRecord: null, records: null, recordPage: 1, history: null, historyPage: 1, recent: [], summaryRequest: 0, recordRequest: 0, historyRequest: 0 };
+let tabStorage, browserStorage;
+try { tabStorage = window.sessionStorage; } catch { /* Browsers may deny storage. */ }
+try { browserStorage = window.localStorage; } catch { /* The tab copy still helps. */ }
+const journal = createDraftJournal(tabStorage, window.KIM_CONFIG?.API_BASE_URL || 'http://127.0.0.1:8000', browserStorage);
+let draftKey = journal.active;
+let draftReady = false;
+let pendingSend = false;
+let sendingQuestion = '';
 let api;
 try { api = createApi(window.KIM_CONFIG?.API_BASE_URL || 'http://127.0.0.1:8000'); }
 catch (error) { api = async () => { throw error; }; }
@@ -46,13 +54,77 @@ function route(focus = true) {
   $$('[data-nav]').forEach(n => { if (n.dataset.nav === state.view) n.setAttribute('aria-current', 'page'); else n.removeAttribute('aria-current'); });
   const titles = { chat: '김실장 상담', records: '작업 기록', summary: '기록 요약', history: '이전 상담' };
   document.title = `${titles[state.view]} · 김실장`;
+  syncChatLayout();
   if (focus) { $(`#${state.view === 'chat' ? 'chat' : state.view}-heading`).focus({ preventScroll: true }); window.scrollTo({ top: 0 }); }
   if (state.view === 'chat' && state.focusComposer) { state.focusComposer = false; $('#chat-input').focus(); }
   if (state.view === 'records' && !state.records) void loadRecords();
   if (state.view === 'summary') { renderSummary(); if (!state.summary) void loadSummary(); }
-  if (state.view === 'history' && !state.history) void loadHistory();
+  if (state.view === 'history') { renderLocalDrafts(); void loadHistory(); }
 }
 window.addEventListener('hashchange', () => route());
+function syncChatLayout() {
+  const active = Boolean(state.conversation?.messages?.length || sendingQuestion);
+  $('#view-chat').classList.toggle('chat-active', active);
+  $('#main').classList.toggle('conversation-mode', state.view === 'chat' && active);
+  $('#toggle-reference').hidden = !active;
+  $('#send-label').textContent = active ? '보내기' : '김실장에게 물어보기';
+  $('#chat-input').rows = active ? 2 : 3;
+  $('#chat-input').placeholder = active ? '이어서 이야기해 주세요…' : '김실장님, 지금 이런 고민이 있어요…';
+}
+$('#toggle-reference').addEventListener('click', () => {
+  const open = $('#toggle-reference').getAttribute('aria-expanded') !== 'true';
+  $('#toggle-reference').setAttribute('aria-expanded', String(open));
+  $('#view-chat').classList.toggle('reference-open', open);
+});
+function captureDraft() {
+  return { question: $('#chat-input').value, mode: $('#chat-mode').value, baseline: clone(state.baseline), seenMessages: state.conversation?.messages?.length || 0,
+    context: { goal: $('#context-goal').value, time: $('#context-time').value, constraints: $('#context-constraints').value, tasks: clone(state.taskDrafts) },
+    detailsOpen: $('#context-details').open, scrollTop: $('#messages').scrollTop, pending: pendingSend, updatedAt: new Date().toISOString() };
+}
+function persistDraft() {
+  if (!draftReady) return;
+  const saved = journal.write(draftKey, captureDraft());
+  $('#draft-state').textContent = saved ? `작성 중인 내용은 ${journal.durable ? '이 브라우저' : '이 탭'}에 임시 보관돼요.` : '이 브라우저에서는 임시 보관을 할 수 없어요. 페이지를 닫기 전 내용을 복사해 주세요.';
+}
+function applyDraft(draft, { rebase = false } = {}) {
+  if (!draft) return;
+  $('#chat-input').value = draft.question; $('#chat-mode').value = draft.mode;
+  const raw = draft.context;
+  // Keep server-only updates, and replay only locally edited conditions.
+  if (rebase && draft.baseline) {
+    const local = { goal: raw.goal.trim() || null, available_minutes: raw.time === '' ? null : Number(raw.time), constraints: raw.constraints.trim() || null, tasks: raw.tasks };
+    setContextForm(rebaseContextDraft(state.baseline, contextPatch(local, draft.baseline)));
+  } else { $('#context-goal').value = raw.goal; $('#context-time').value = raw.time; $('#context-constraints').value = raw.constraints; state.taskDrafts = clone(raw.tasks); renderTasks(); updateContextSummary(); }
+  $('#context-details').open = Boolean(draft.detailsOpen);
+  pendingSend = Boolean(draft.pending);
+  if (pendingSend) {
+    feedback($('#chat-error'), '이전 요청의 저장 여부를 아직 확인하지 못했어요. ‘이전 상담’에서 확인한 뒤 다시 보내 주세요. 질문은 임시 보관했어요.', true);
+    $('#chat-error').append(el('a', { href: '#history', text: '이전 상담 확인하기' }));
+  }
+}
+function renderLocalDrafts() {
+  const root = $('#local-drafts'); root.replaceChildren();
+  const drafts = journal.entries().filter(({ draft }) => hasUnsentDraft(draft));
+  root.hidden = !drafts.length;
+  if (!drafts.length) return;
+  root.append(el('h2', { text: '작성 중인 질문' }), p('브라우저에 임시 보관한 내용이에요. 서버에 저장된 상담과 구분해요.', 'small muted'));
+  drafts.forEach(({ id, draft }) => root.append(button(draft.question.trim().slice(0, 70) || '현재 상황을 작성한 상담', () => openDraft(id), 'draft-open')));
+}
+async function openDraft(id) {
+  if (state.chatBusy) return;
+  if (id.startsWith('conversation:')) return loadConversation(id.slice(13));
+  persistDraft(); draftKey = id; journal.activate(id); state.conversation = null; pendingSend = false; sendingQuestion = ''; state.restoreFailed = false; setChatLocked(false); fillContext(EMPTY_CONTEXT); clearFeedback($('#chat-error')); applyDraft(journal.read(id));
+  $('#chat-subtitle').textContent = '작성 중인 질문을 이어서 적어 주세요.'; $('#save-state').textContent = '답변 완료 후 이전 상담에 저장'; renderMessages(); persistDraft(); location.hash = 'chat'; $('#chat-input').focus();
+}
+$('#chat-form').addEventListener('input', persistDraft);
+$('#chat-form').addEventListener('change', persistDraft);
+$('#context-details').addEventListener('toggle', persistDraft);
+$('#chat-mode').addEventListener('change', persistDraft);
+window.addEventListener('pagehide', persistDraft);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) persistDraft();
+  else { void loadRecent(); if (state.view === 'history') void loadHistory(); }
+});
 
 async function loadSummary() {
   const request = ++state.summaryRequest;
@@ -153,13 +225,13 @@ function renderTasks() {
     const dependencies = el('div', { class: 'dependencies' }, [el('span', { class: 'small muted', text: '먼저 끝낼 일' })]);
     state.taskDrafts.filter(t => t.id !== task.id).forEach((other, i) => dependencies.append(el('label', {}, [el('input', { type: 'checkbox', checked: task.depends_on.includes(other.id), onchange: e => { task.depends_on = e.target.checked ? [...task.depends_on, other.id] : task.depends_on.filter(id => id !== other.id); } }), `${state.taskDrafts.indexOf(other) + 1}번 할 일`])));
     if (state.taskDrafts.length < 2) dependencies.append(el('span', { class: 'small muted', text: '다른 할 일을 추가하면 선택할 수 있어요.' }));
-    root.append(el('div', { class: 'task-editor' }, [el('div', { class: 'task-editor-head' }, [el('label', { text: `할 일 ${index + 1}` }, [title]), button('제거', () => { state.taskDrafts = state.taskDrafts.filter(t => t.id !== task.id).map(t => ({ ...t, depends_on: t.depends_on.filter(id => id !== task.id) })); renderTasks(); updateContextSummary(); }, 'text-button', { 'aria-label': `할 일 ${index + 1} 제거` })]), el('div', { class: 'task-options' }, [el('label', { text: `할 일 ${index + 1} 마감일 (선택)` }, [due]), el('label', { text: `할 일 ${index + 1} 중요도` }, [importance])]), dependencies]));
+    root.append(el('div', { class: 'task-editor' }, [el('div', { class: 'task-editor-head' }, [el('label', { text: `할 일 ${index + 1}` }, [title]), button('제거', () => { state.taskDrafts = state.taskDrafts.filter(t => t.id !== task.id).map(t => ({ ...t, depends_on: t.depends_on.filter(id => id !== task.id) })); renderTasks(); updateContextSummary(); persistDraft(); }, 'text-button', { 'aria-label': `할 일 ${index + 1} 제거` })]), el('div', { class: 'task-options' }, [el('label', { text: `할 일 ${index + 1} 마감일 (선택)` }, [due]), el('label', { text: `할 일 ${index + 1} 중요도` }, [importance])]), dependencies]));
   });
 }
 $('#add-task').addEventListener('click', () => {
   if (state.taskDrafts.length >= 10) return;
   state.taskDrafts.push({ id: `t_${crypto.randomUUID().replaceAll('-', '').slice(0, 12)}`, title: '', due_date: null, importance: 'unknown', depends_on: [] }); renderTasks(); updateContextSummary();
-  $('#context-tasks .task-editor:last-child input').focus();
+  persistDraft(); $('#context-tasks .task-editor:last-child input').focus();
 });
 $('#context-fields').addEventListener('input', updateContextSummary);
 
@@ -179,7 +251,9 @@ function renderPlan(message) {
 function renderMessages({ scroll = false } = {}) {
   const root = $('#messages');
   const messages = state.conversation?.messages || [];
-  if (!messages.length) {
+  syncChatLayout();
+  if (!messages.length && !sendingQuestion) {
+    $('#latest-message').hidden = true;
     root.replaceChildren(welcomeTemplate.cloneNode(true));
     $$('[data-starter]', root).forEach(n => n.addEventListener('click', () => prefill(n.dataset.starter, n.dataset.mode)));
   } else {
@@ -191,50 +265,73 @@ function renderMessages({ scroll = false } = {}) {
       if (m.role === 'assistant' && m.evidence) article.append(p(`가상 기록 근거 · ${m.evidence.count}건 · 기준일 ${m.evidence.as_of || '없음'} · 요약 v${m.evidence.data_revision}${m.evidence.period ? ` · ${m.evidence.period.start}~${m.evidence.period.end}` : ''}`, 'message-evidence'));
       root.append(article);
     });
+    if (sendingQuestion) root.append(el('article', { class: 'message message-user' }, [el('div', { class: 'message-head' }, [el('strong', { text: '나' }), el('span', { class: 'small muted', text: '답변을 기다리는 중' })]), p(sendingQuestion, 'message-content')]));
   }
-  if (scroll) { root.scrollTop = root.scrollHeight; $('#latest-message').hidden = true; }
+  if (scroll) {
+    const lastAnswer = sendingQuestion ? null : $$('.message-assistant', root).at(-1);
+    root.scrollTop = lastAnswer ? lastAnswer.offsetTop - root.offsetTop - 24 : root.scrollHeight;
+    $('#latest-message').hidden = true;
+  }
 }
 const welcomeTemplate = $('#welcome').cloneNode(true);
-$('#messages').addEventListener('scroll', () => { const n = $('#messages'); $('#latest-message').hidden = n.scrollHeight - n.scrollTop - n.clientHeight < 100 || !state.conversation?.messages?.length; });
+$('#messages').addEventListener('scroll', () => { const n = $('#messages'); $('#latest-message').hidden = n.scrollHeight - n.scrollTop - n.clientHeight < 100 || !state.conversation?.messages?.length; persistDraft(); });
 $('#latest-message').addEventListener('click', () => { const n = $('#messages'); n.scrollTop = n.scrollHeight; $('#latest-message').hidden = true; });
 function newChat() {
   if (state.chatBusy) return;
-  state.conversation = null; fillContext(EMPTY_CONTEXT); $('#chat-mode').value = 'strategy'; $('#chat-input').value = ''; $('#chat-subtitle').textContent = '무엇부터, 어떻게 할지 함께 정해요.'; $('#save-state').textContent = '답변 후 자동 저장'; clearFeedback($('#chat-error')); renderMessages(); $('#chat-input').focus();
+  persistDraft(); draftKey = `new:${crypto.randomUUID()}`; pendingSend = false; sendingQuestion = ''; state.restoreFailed = false;
+  state.conversation = null; setChatLocked(false); fillContext(EMPTY_CONTEXT); $('#context-details').open = false; $('#chat-mode').value = 'strategy'; $('#chat-input').value = ''; $('#chat-subtitle').textContent = '무엇부터, 어떻게 할지 함께 정해요.'; $('#save-state').textContent = '답변 완료 후 이전 상담에 저장'; clearFeedback($('#chat-error')); renderMessages(); persistDraft(); $('#chat-input').focus();
 }
 $('#new-chat').addEventListener('click', newChat);
 function prefill(message, mode) {
   if (state.chatBusy) return;
   // A candidate starts a new consultation; never silently posts a paid request.
-  if (state.conversation) newChat();
+  if (state.conversation || $('#chat-input').value.trim()) newChat();
   $('#chat-input').value = message; $('#chat-mode').value = mode;
+  persistDraft();
   if (location.hash === '#chat') $('#chat-input').focus();
   else { state.focusComposer = true; location.hash = 'chat'; }
   toast('질문 초안을 채웠어요. 내용을 확인한 뒤 물어보기 버튼을 눌러 주세요.');
 }
-async function loadConversation(id, { preserveInput = false } = {}) {
+async function loadConversation(id, { preserveInput = false, restore = false } = {}) {
   if (state.chatBusy || state.loadingConversation) return;
+  persistDraft();
+  const savedDraft = journal.read(`conversation:${id}`);
   const localPatch = preserveInput ? contextPatch(readContextDraft(), state.baseline) : null;
   const localMode = $('#chat-mode').value;
   state.loadingConversation = true; setChatLocked(true); $('#chat-progress').hidden = false; $('#chat-progress-text').textContent = '저장된 상담을 불러오고 있어요…';
   try {
     const { conversation } = await api(`/api/conversations/${encodeURIComponent(id)}`);
+    draftKey = `conversation:${id}`; journal.activate(draftKey); pendingSend = false; sendingQuestion = ''; state.restoreFailed = false;
+    if (savedDraft?.pending && conversation.messages.length > savedDraft.seenMessages && conversation.messages[savedDraft.seenMessages]?.role === 'user' && conversation.messages[savedDraft.seenMessages]?.content === savedDraft.question.trim()) {
+      savedDraft.question = ''; savedDraft.pending = false; savedDraft.context = { goal: conversation.context.goal || '', time: String(conversation.context.available_minutes ?? ''), constraints: conversation.context.constraints || '', tasks: conversation.context.tasks }; savedDraft.baseline = conversation.context;
+    }
     state.conversation = conversation; fillContext(conversation.context); $('#chat-mode').value = conversation.mode;
     if (preserveInput) { setContextForm(rebaseContextDraft(conversation.context, localPatch)); $('#chat-mode').value = localMode; }
-    if (!preserveInput) $('#chat-input').value = '';
-    $('#chat-subtitle').textContent = conversation.title; $('#save-state').textContent = '저장된 상담 · 이어서 대화'; clearFeedback($('#chat-error')); renderMessages({ scroll: true }); location.hash = 'chat';
-    toast(preserveInput ? '최신 대화를 불러왔어요. 작성한 질문과 바꾼 조건은 그대로 남겨뒀어요.' : '이전 상담과 그때의 조건을 불러왔어요.');
-  } catch (error) { toast(error.message); }
-  finally { state.loadingConversation = false; setChatLocked(false); $('#chat-progress').hidden = true; }
+    if (!preserveInput) { $('#chat-input').value = ''; clearFeedback($('#chat-error')); applyDraft(savedDraft, { rebase: true }); }
+    $('#chat-subtitle').textContent = conversation.title; $('#save-state').textContent = '이전 상담에 저장됨'; if (preserveInput) clearFeedback($('#chat-error')); renderMessages({ scroll: true }); persistDraft();
+    if (restore && Number.isFinite(savedDraft?.scrollTop)) $('#messages').scrollTop = savedDraft.scrollTop;
+    if (!restore) location.hash = 'chat';
+    toast(preserveInput ? '최신 대화를 불러왔어요. 작성한 질문과 바꾼 조건은 그대로 남겨뒀어요.' : '이전 상담과 작성 중인 내용을 불러왔어요.');
+  } catch (error) {
+    if (restore) {
+      state.baseline = clone(savedDraft?.baseline || EMPTY_CONTEXT);
+      applyDraft(savedDraft); feedback($('#chat-error'), `${error.message} 작성 중인 질문은 보관했어요. 상담을 불러온 뒤 이어서 보내 주세요.`, true);
+      $('#chat-error').append(button('상담 다시 불러오기', () => loadConversation(id, { restore: true }), 'text-button'));
+      state.restoreFailed = true;
+    } else toast(error.message);
+  }
+  finally { state.loadingConversation = false; setChatLocked(false); $('#chat-progress').hidden = true; if (restore) { draftReady = true; state.restoreFailed = !state.conversation; $('#send-chat').disabled = state.restoreFailed; persistDraft(); } }
 }
 $('#chat-form').addEventListener('submit', async event => {
   event.preventDefault(); if (state.chatBusy) return;
+  if (state.restoreFailed) return;
   const message = $('#chat-input').value.trim(); if (!message) { $('#chat-input').focus(); return; }
   let patch;
   try { patch = contextPatch(getContextDraft(), state.baseline); }
   catch (error) { feedback($('#chat-error'), error.message, true); $('#context-details').open = true; return; }
   const body = { message, mode: $('#chat-mode').value, ...(state.conversation ? { conversation_id: state.conversation.id } : {}), ...(Object.keys(patch).length ? { context: patch } : {}) };
   const previousMessages = state.conversation?.messages || [];
-  const root = $('#messages'), nearBottom = root.scrollHeight - root.scrollTop - root.clientHeight < 100, previousScroll = root.scrollTop;
+  pendingSend = true; sendingQuestion = message; persistDraft(); renderMessages({ scroll: true }); $('#context-details').open = false;
   $('#chat-announcement').textContent = '';
   clearFeedback($('#chat-error')); setChatLocked(true); $('#chat-progress').hidden = false; $('#chat-progress-text').textContent = '김실장이 기록을 참고해 답변을 정리하고 있어요…'; $('#save-state').textContent = '답변과 대화를 저장하는 중';
   const slowTimer = setTimeout(() => { $('#chat-progress-text').textContent = '조금 더 살펴보고 있어요. 첫 연결은 서버 준비 때문에 늦을 수 있어요. 답변이 올 때까지 기다려 주세요.'; }, 12000);
@@ -242,12 +339,14 @@ $('#chat-form').addEventListener('submit', async event => {
     const result = await api('/api/chat', { method: 'POST', body, timeout: 160000 });
     // Success means the backend committed both messages. GET is safe and unbilled.
     state.conversation = { ...(state.conversation || {}), id: result.conversation_id, context: result.context, mode: result.message.mode, title: state.conversation?.title || message.slice(0, 40), messages: [...previousMessages, { role: 'user', content: message, mode: body.mode, created_at: result.message.created_at }, result.message] };
-    fillContext(result.context); $('#chat-mode').value = result.message.mode; $('#chat-input').value = ''; $('#save-state').textContent = '상담이 자동 저장됐어요'; $('#chat-subtitle').textContent = state.conversation.title;
-    $('#chat-announcement').textContent = '김실장 답변을 저장했어요. 상담 메시지에서 확인해 주세요.';
-    renderMessages({ scroll: nearBottom });
-    if (!nearBottom) { root.scrollTop = previousScroll; $('#latest-message').hidden = false; }
+    journal.remove(draftKey); draftKey = `conversation:${result.conversation_id}`; pendingSend = false; sendingQuestion = '';
+    fillContext(result.context); $('#chat-mode').value = result.message.mode; $('#chat-input').value = ''; $('#save-state').textContent = '이전 상담에 자동 저장됐어요'; $('#chat-subtitle').textContent = state.conversation.title;
+    persistDraft();
+    $('#chat-announcement').textContent = '질문과 답변이 이전 상담에 저장됐어요.';
+    renderMessages({ scroll: true });
     state.history = null; void loadRecent();
   } catch (error) {
+    sendingQuestion = ''; pendingSend = ['timeout', 'network_error', 'storage_unavailable'].includes(error.code); persistDraft(); renderMessages();
     feedback($('#chat-error'), `${error.message} 질문은 그대로 남겨뒀어요.`, true);
     if (error.status === 409 && state.conversation) $('#chat-error').append(button('최신 대화 불러오기', () => loadConversation(state.conversation.id, { preserveInput: true }), 'text-button'));
     if (['timeout', 'network_error', 'storage_unavailable'].includes(error.code)) $('#chat-error').append(el('a', { href: '#history', text: '이전 상담에서 저장 여부 확인' }));
@@ -365,7 +464,8 @@ function deleteConversation(item) {
   if (state.chatBusy) return;
   confirmDelete('이 상담을 삭제할까요?', `‘${item.title}’의 메시지 ${item.message_count}개와 상담 조건을 모두 삭제해요. 되돌릴 수 없어요. 작업 기록은 그대로 남아요.`, async () => {
     await api(`/api/conversations/${encodeURIComponent(item.id)}`, { method: 'DELETE' });
-    if (state.conversation?.id === item.id) newChat();
+    if (state.conversation?.id === item.id) { draftReady = false; newChat(); draftReady = true; persistDraft(); }
+    journal.remove(`conversation:${item.id}`);
     await Promise.allSettled([loadHistory(), loadRecent()]); toast('선택한 상담을 삭제했어요. 작업 기록은 그대로예요.');
   });
 }
@@ -375,5 +475,10 @@ $('#refresh-records').addEventListener('click', () => loadRecords());
 $('#refresh-history').addEventListener('click', () => loadHistory());
 $('#record-form [name=date]').max = todayKST();
 resetRecordForm(); fillContext(EMPTY_CONTEXT); renderMessages(); route(false);
+const startupDraft = journal.read();
+if (draftKey.startsWith('conversation:')) {
+  // Restore with GET only. Never replay a model request after reload or tab return.
+  void loadConversation(draftKey.slice(13), { restore: true });
+} else { applyDraft(startupDraft); draftReady = true; persistDraft(); }
 if (state.view !== 'summary') void loadSummary();
 void loadRecent();

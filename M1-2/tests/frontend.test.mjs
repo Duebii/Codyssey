@@ -1,8 +1,57 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createApi, ApiError, contextPatch, rebaseContextDraft, EMPTY_CONTEXT, validateContext, recordPayload, minutes, number, todayKST } from '../frontend/lib.js';
+import { createApi, ApiError, contextPatch, rebaseContextDraft, EMPTY_CONTEXT, validateContext, recordPayload, minutes, number, todayKST, createDraftJournal, hasUnsentDraft } from '../frontend/lib.js';
 
 const clone = v => structuredClone(v);
+function memoryStorage() { const values = new Map(); return { getItem: k => values.get(k) ?? null, setItem: (k, v) => values.set(k, v) }; }
+const draft = () => ({ question: '  작성 중 💞\n다음 줄  ', mode: 'automation', baseline: clone(EMPTY_CONTEXT), context: { goal: '  목표  ', time: '', constraints: '', tasks: [{ id: 'a', title: '', due_date: null, importance: 'unknown', depends_on: [] }] }, detailsOpen: true, pending: false });
+test('a tab reload restores raw drafts and active consultation, including unfinished task names', () => {
+  const storage = memoryStorage(), first = createDraftJournal(storage, 'api');
+  first.write('conversation:one', draft());
+  const restored = createDraftJournal(storage, 'api');
+  assert.equal(restored.active, 'conversation:one'); assert.deepEqual(restored.read(), draft());
+  const detached = restored.read(); detached.context.tasks[0].title = 'mutation';
+  assert.equal(restored.read().context.tasks[0].title, '');
+});
+test('a discarded tab recovers from browser backup without live tabs overwriting each other', () => {
+  const backup = memoryStorage(), originalTab = memoryStorage();
+  const original = createDraftJournal(originalTab, 'api', backup); original.write('new:one', draft());
+  const second = createDraftJournal(memoryStorage(), 'api', backup);
+  assert.deepEqual(second.read(), draft()); second.write('new:two', { ...draft(), question: '다른 탭' });
+  assert.equal(createDraftJournal(originalTab, 'api', backup).read().question, draft().question);
+  assert.equal(createDraftJournal(undefined, 'api', backup).read().question, '다른 탭');
+  const denied = { getItem() { throw Error(); }, setItem() { throw Error(); } };
+  const fallback = createDraftJournal(denied, 'api', backup); assert.equal(fallback.read().question, '다른 탭');
+  assert.equal(fallback.write('new', draft()), true); assert.equal(fallback.durable, true);
+});
+test('new consultations and history selection keep other unsent drafts, scoped to the API and browser tab', () => {
+  const storage = memoryStorage(), journal = createDraftJournal(storage, 'api');
+  journal.write('new:one', draft()); journal.write('conversation:two', { ...draft(), question: '다른 질문' });
+  journal.activate('new:one'); assert.equal(journal.entries().length, 2); assert.equal(journal.read().question, draft().question);
+  assert.equal(createDraftJournal(storage, 'other-api').read(), null);
+  assert.equal(createDraftJournal(memoryStorage(), 'api').read(), null);
+});
+test('interrupted sends remain drafts after reload, and only confirmed success can remove them', () => {
+  const storage = memoryStorage(), journal = createDraftJournal(storage, 'api');
+  journal.write('new:one', { ...draft(), pending: true });
+  const restored = createDraftJournal(storage, 'api'); assert.equal(restored.read().pending, true);
+  restored.remove('new:one'); restored.write('conversation:saved', { ...draft(), question: '', pending: false });
+  assert.equal(createDraftJournal(storage, 'api').read().question, ''); assert.equal(restored.read('new:one'), null);
+});
+test('saved consultation conditions alone are not mislabeled as an unfinished question', () => {
+  const item = draft(); item.question = ''; item.context.tasks = []; item.baseline.goal = '목표';
+  assert.equal(hasUnsentDraft(item), false);
+  item.context.time = '40'; assert.equal(hasUnsentDraft(item), true);
+  item.context.time = ''; item.pending = true; assert.equal(hasUnsentDraft(item), true);
+});
+test('unavailable or corrupt tab storage degrades without crashing or trusting malformed task data', () => {
+  const blocked = createDraftJournal({ getItem() { throw Error(); }, setItem() { throw Error(); } }, 'api');
+  assert.equal(blocked.available, false); assert.equal(blocked.write('new', draft()), false); assert.deepEqual(blocked.read(), draft());
+  const storage = memoryStorage(); storage.setItem('kim-workspace-v1:api', '{broken');
+  assert.equal(createDraftJournal(storage, 'api').read(), null);
+  storage.setItem('kim-workspace-v1:api', JSON.stringify({ version: 1, active: 'new', drafts: { new: { ...draft(), context: { ...draft().context, tasks: [null] } } } }));
+  assert.equal(createDraftJournal(storage, 'api').read(), null);
+});
 test('unchanged conditions stay omitted, so natural-language time updates are not contradicted', () => {
   const old = { ...clone(EMPTY_CONTEXT), available_minutes: 120 };
   assert.deepEqual(contextPatch(clone(old), old), {});

@@ -20,4 +20,4 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 ## Preserved boundaries
 
-No backend, credentials, prompt, data or deployment changes. Preserve all API contracts, dirty-context handling, safe text rendering, error input preservation, deletion confirmation and completion announcements. Existing 150 synthetic records are only read. No paid model calls are needed for visual verification.
+The 2026-10-28 user request authorizes draft recovery and a first-question → dedicated chat transition, including updating the existing frontend deployment. The ink-blue visual identity remains. Preserve all API contracts, dirty-context handling, safe text rendering, deletion confirmation and completion announcements. The first question retains its existing introduction; subsequent conversation uses the full sheet with a bottom composer and collapsible reference rail. Browser draft status and server conversation saving must name their destinations separately. No backend, credential, prompt or existing-data changes are needed. No paid model calls are needed for verification.

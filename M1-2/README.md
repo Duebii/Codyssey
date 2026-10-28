@@ -2,142 +2,209 @@
 
 **AI Agent 개발: 나만의 AI 비서 구축**
 
-김실장은 작업 기록을 참고해 **무엇부터 할지 정하고, 어떻게 끝낼지 전략을 세우며, 반복 업무의 개선·자동화 방법을 설계하는 AI 업무 전략 비서**입니다. 사용자가 질문할 때 상담을 제공합니다.
+김실장은 작업 기록을 참고해 **우선순위를 정하고, 실행 전략을 세우며, 반복 업무의 자동화 방법을 설계하는 AI 업무 전략 비서**입니다. 프리랜서·취업 준비·창업 준비처럼 여러 일이 겹칠 때, 사용자가 질문하면 목표·마감·가능 시간에 맞춰 다음 행동을 제안합니다.
 
-## 현재 진행 상태
+현재 버전은 **가상 데이터로 구현한 공개 시연용 서비스**입니다. 자동화 상담은 설계와 검증 방법을 제안하며, 외부 프로그램을 직접 실행하거나 메시지를 전송하지 않습니다.
 
-**10단계 Render·Vercel 배포까지 완료했습니다.** 공개 웹에서 기록 추가·수정, 요약, 실제 GPT 상담·자동 저장, 새로고침 후 이전 상담 불러오기를 확인했습니다. 검증용 기록은 삭제했고 기존 작업 150건·6,524분과 기존 상담 11개를 보존했습니다. Python 221개·Node 14개 테스트를 통과했습니다. [전체 흐름 점검](docs/INTEGRATION.md), [배포 설정과 실제 검증 결과](docs/DEPLOYMENT.md)를 확인할 수 있습니다.
+## 바로 접속하기
 
-| 접속 | 주소 |
+| 구분 | 주소 |
 | --- | --- |
-| 김실장 웹 | [m1-2-kim-manager.vercel.app](https://m1-2-kim-manager.vercel.app) |
-| 백엔드 API 상태 | [Render 서버 상태](https://m1-2-kim-manager.onrender.com/api/health) |
-| Swagger API 문서 | [배포 API 문서](https://m1-2-kim-manager.onrender.com/docs) |
+| 웹 서비스 · Vercel | [김실장 열기](https://m1-2-kim-manager.vercel.app) |
+| 백엔드 기본 주소 · Render | `https://m1-2-kim-manager.onrender.com` |
+| 백엔드 접속 확인 | [API 서버 상태](https://m1-2-kim-manager.onrender.com/api/health) |
+| Swagger API 문서 | [API 목록과 요청 형식 확인](https://m1-2-kim-manager.onrender.com/docs) |
 | GitHub 코드 | [Duebii/Codyssey · M1-2](https://github.com/Duebii/Codyssey/tree/main/M1-2) |
 
-Render 무료 서버는 오래 사용하지 않으면 첫 접속에 약 1분 걸릴 수 있습니다. 화면에서 서버 준비 안내와 재시도 방법을 확인합니다. 현재는 로그인 없는 가상 데이터 시연용이며, 실제 개인 기록 운영에는 접근 제어를 추가해야 합니다.
+백엔드 기본 주소 뒤에 `/api/...`를 붙여 호출합니다. 루트 `/`는 화면을 제공하지 않으므로 접속 확인에는 위 서버 상태 또는 Swagger 주소를 사용합니다. Render 무료 서버는 사용하지 않는 동안 정지할 수 있어 첫 접속에 약 1분 걸릴 수 있습니다. 화면의 서버 준비 안내에 따라 재시도하고, 저장 여부가 불확실하면 목록·이전 상담을 먼저 확인합니다.
 
-서버 실행 중 [김실장 웹 화면](http://127.0.0.1:5500)을 엽니다. [웹 화면 실행·사용 안내](docs/FRONTEND.md)에 두 서버의 실행 방법과 검증 범위를 정리했습니다.
+**데이터 제출 허용:** 2026-10-28 사용자가 과제 담당자에게 더미데이터 제출 허용을 확인받았다고 알려 주었습니다. 아래 데이터는 실제 개인 기록이나 성과 자료가 아닌 합성 데이터이며, 허용 확인의 근거는 사용자의 확인입니다.
 
-2026-10-27에는 사용자 취향에 맞춰 잉크 블루 중심의 차분한 화면, 한글 서체, 모바일 메뉴와 메모 펼치기를 다듬었습니다. [디자인 기준](docs/UI_DESIGN.md)에 기록했습니다.
+## 핵심 기능과 사용 방법
 
-| 구분 | 상태 |
+| 기능 | 입력 | 확인할 결과 |
+| --- | --- | --- |
+| 데이터 기반 AI 상담 | 질문, 선택 입력으로 목표·시간·할 일·마감·중요도·선행 작업 | 저장된 요약을 반영한 답변과 근거, 로딩·오류 안내 |
+| 우선순위·실행 전략 | 오늘 할 일과 사용 가능한 시간 | 우선순위 이유, 완료 기준, 단계별 시간, 첫 행동, 점검·대안 |
+| 반복 업무 자동화 설계 | 실제 작업 과정·도구·입력·출력에 대한 설명 | 기록상 반복 후보와 수치, 자동화 부분·사람 확인 부분, 작은 검증 절차 |
+| 기록 관리 · CRUD | 작업 날짜·실제 시간·메모·작업명·분야·선택 예상 시간 | 기록 추가·목록·수정·삭제와 최신 요약 |
+| 대화 기록 | 자동 저장된 상담을 목록에서 선택 | 이전 질문·답변·당시 근거·현재 조건 복원, 이어서 상담 |
+
+처음에는 **기록 요약**에서 가상 기록의 범위와 통계를 확인한 뒤 상담 종류를 선택합니다. 전략 상담이라면 ‘현재 상황’에 할 일과 시간을 입력하고 질문합니다. 예를 들어 “제안서 작성은 오늘, 지원서 작성은 모레 마감이고 오늘 90분 쓸 수 있어요. 두 문서의 초안을 만들 순서를 정해 주세요.”라고 물을 수 있습니다. 계획은 입력한 시간이 넘지 않도록 서버에서 검사합니다. 상담 중 시간이나 마감이 바뀌면 새 조건을 알려 다시 계획할 수 있습니다.
+
+## 제출 화면
+
+다음은 **2026-10-27 실제 배포 웹에서 검증한 화면**입니다. 현재 목록은 사용 중 변경될 수 있으며, 캡처를 현재 실시간 상태로 해석하지 않습니다.
+
+### 1. 데이터 요약을 반영한 질문·답변
+
+저장된 가상 기록 **150건·6,524분**, 기준일 **2026-10-20**을 답변과 참고 요약에서 확인합니다. 이 화면은 대화 저장 후 새로고침하여 다시 불러온 결과이기도 합니다.
+
+![실제 GPT 질문·답변과 데이터 요약](docs/screenshots/stage10-20261027/chat-restored.jpg)
+
+### 2. 기록 관리 · 수정 결과
+
+웹에서 시험 기록을 12분으로 추가한 뒤 18분으로 수정했습니다. 캡처의 **151건**은 임시 기록을 포함한 상태입니다. 확인 뒤 해당 기록만 삭제해 원본 **150건·6,524분**을 보존했습니다.
+
+![작업 기록 수정 결과](docs/screenshots/stage10-20261027/records-update.jpg)
+
+### 3. 이전 상담 목록과 불러오기
+
+웹을 새로고침한 뒤 `[10단계 웹 확인]` 상담을 선택해 질문·답변·상담 종류를 복원했습니다. 목록의 제목은 위 1번 화면과 같으며, [불러온 상세 화면](docs/screenshots/stage10-20261027/chat-restored.jpg)에서 같은 질문과 답변을 비교할 수 있습니다.
+
+![새로고침 후 이전 상담 목록](docs/screenshots/stage10-20261027/history.jpg)
+
+[배포 검증 결과](docs/DEPLOYMENT.md)와 [전체 흐름 점검](docs/INTEGRATION.md)에 시나리오와 검증 범위를 기록했습니다.
+
+## 데이터 선정과 분석
+
+한 건은 **특정 날짜에 작업을 한 번 수행한 기록**입니다. 같은 날짜에 여러 건이 있을 수 있고 날짜순으로 누적 시간과 변화를 비교할 수 있어 시계열 데이터로 분석합니다. 과제의 `(date, value, memo)`를 유지하고 작업명·분야·예상 시간·가상 출처를 추가했습니다.
+
+| 항목 | 기본 데이터 |
 | --- | --- |
-| 가상 작업 기록 150건 | 완료 |
-| 데이터 설명과 분석 예시 | 완료 |
-| 재생성·검증 도구 | 완료 |
-| 순서별 개발 워크리스트 | 완료 |
-| 1단계 화면·상담 규칙·데이터/API 계약 | 설계 완료 |
-| 2단계 가상환경·패키지·설정 점검 | 로컬 준비 완료 |
-| Firebase 프로젝트·Firestore·서비스 계정 키 | 설정 완료, 실제 150건 저장 및 CRUD 성공 |
-| GPT API 키 | 코디세이 제공 키 인증 성공. 코디세이 서버의 `gpt-5-mini` 사용 |
-| 3단계 FastAPI 실행·Pydantic 검증·CORS·Swagger | 완료, 외부 키 없이 실행 가능 |
-| 4단계 Firestore 연결·작업 CRUD·중복 없는 가져오기 | 완료. 실제 CRUD·중복 방지·서버 재시작 후 유지 확인 |
-| 5단계 시계열 분석·요약 API | 완료. Firestore 저장·캐시·CRUD 후 자동 갱신 확인 |
-| 6단계 대화 저장·목록·전체 불러오기·삭제 | 완료. 시연용 고정 메시지 4개로 실제 저장·조회·삭제 검증 |
-| 7단계 GPT 연동·계획 검증·채팅 자동 저장 | 완료. 전체 테스트 206개·실제 상담 5개 시나리오·재시작 후 대화 유지 확인 |
-| 8단계 바닐라 웹 화면 | 완료. 네 화면·실제 API 연결·모바일·빈 상태·오류 안내 확인 |
-| 9단계 전체 흐름 점검 | 완료. 기록 CRUD→최신 상담, 90→45분·마감 변경, 이전 상담 재개, 연결 실패·키 노출 검사 |
-| 10단계 Render·Vercel 배포 | 완료. 공개 웹·API·Swagger, CORS, 실제 CRUD·GPT·상담 불러오기 검증 |
+| 출처 | 가상 사용자 한 명의 합성 작업 기록, `source: synthetic` |
+| 기간·개수 | 2026-08-26 ~ 2026-10-20, 56일 동안 150건 |
+| 단위 | `value`: 작업 한 건의 소요 시간(분) |
+| 기록일·미기록일 | 40일·16일. 미기록일은 `null`과 `unrecorded`로 구분 |
+| 총 시간·평균·최대·최소 | 6,524분·43.49분·77분·17분 |
+| 최근 추세 | 마지막 기록일 기준 최근 7일 868분 / 이전 7일 921분, -5.75% |
+| 생성·재현 | 고정 기간과 난수 시드 `1021`, Python 표준 라이브러리로 재생성 가능 |
 
-공유할 코드에는 실제 개인 데이터와 API 키를 포함하지 않습니다. 로컬 `.env`와 서비스 계정 키 파일은 Git에서 제외됩니다. 사용자 승인 후 키는 Render 비공개 환경변수로만 연결했고, Vercel에는 공개 API 주소만 설정했습니다. 배포 시험 후 원본 150건·6,524분과 점검 전 상담 11개의 내용이 그대로임을 확인했습니다. 현재 요약 버전은 168이며, 검증용 상담 2개를 추가해 총 상담 13개·메시지 44개를 보관했습니다. 코디세이 키는 전용 서버로 연결합니다. 더미데이터의 제출 인정 여부는 과제 제공자에게 확인해야 합니다. 실제 업무에서의 효용은 별도 개선 항목으로 남아 있습니다.
+분야별 시간 비중, 작업별 수행 횟수, 예상 대비 초과 시간, 3회 이상 반복된 작업 후보를 추가로 계산합니다. 7일 집계는 첫 기록일부터 연속 7일씩 묶습니다. 최근 추세는 마지막 기록일을 기준으로 비교하며 오늘의 상황이나 성과를 뜻하지 않습니다. 의도적으로 넣은 패턴은 실제 자동화 효과의 증거가 아닙니다.
 
-## 파일 안내
+원본은 [work_records.json](data/work_records.json), 출처·생성 조건과 허용 확인은 [dataset_metadata.json](data/dataset_metadata.json), 자세한 계산 기준은 [데이터 설명](docs/DATASET.md)에 있습니다. [summary.preview.json](data/summary.preview.json)은 고정된 로컬 분석 예시이고 최신 서비스 요약은 `/api/data/summary`로 조회합니다.
 
-| 파일 | 용도 |
-| --- | --- |
-| [WORKLIST.md](WORKLIST.md) | 앞으로 진행할 작업 순서와 단계별 완료 기준 |
-| [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md) | 화면 구성·상담 입력과 답변·실행 전략·대표 사용 흐름 |
-| [docs/API_CONTRACT.md](docs/API_CONTRACT.md) | 기록·상담 조건의 검증, API 응답, 요약 계산과 최신성 기준 |
-| [docs/SETUP.md](docs/SETUP.md) | 로컬 환경 사용법과 남은 Firebase·OpenAI 프로젝트/키 준비 순서 |
-| [docs/BACKEND_START.md](docs/BACKEND_START.md) | 외부 키 없이 서버 실행, Swagger 요청 검증, 현재 기능 범위 |
-| [docs/FIRESTORE.md](docs/FIRESTORE.md) | 기록 CRUD·트랜잭션·출처 보호·실제 저장/중복/재시작 검증 결과 |
-| [docs/SUMMARY.md](docs/SUMMARY.md) | 일별·주별 분석, 예상 시간 비교, 요약 저장·최신성·실제 갱신 검증 |
-| [docs/CONVERSATIONS.md](docs/CONVERSATIONS.md) | 대화 API, 목록/상세 분리, 조건·메시지 보존, 실제 저장·조회·삭제 검증 |
-| [docs/CHAT.md](docs/CHAT.md) | 코디세이 연결·컨텍스트 주입·계획 검증·호출 제한·실제 상담과 저장 검증 |
-| [docs/FRONTEND.md](docs/FRONTEND.md) | 웹 화면 실행·사용법·주소 설정·오류 처리·실제 화면 검증 |
-| [docs/INTEGRATION.md](docs/INTEGRATION.md) | 9단계 실제 전체 흐름·발견한 문제와 수정·시험 결과·재현 방법 |
-| [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) | Render·Vercel 설정·환경변수·배포 현황·공개 접속 확인 순서 |
-| [docs/UI_DESIGN.md](docs/UI_DESIGN.md) | 네 화면의 디자인과 데이터 표시 기준 |
-| [frontend/index.html](frontend/index.html) | 프레임워크 없이 만든 김실장 웹 화면 |
-| [scripts/build_frontend.py](scripts/build_frontend.py) | 공개 API 주소만 반영하는 정적 파일 빌드 |
-| [scripts/import_dummy_data.py](scripts/import_dummy_data.py) | 기본은 오프라인 검증, 외부 준비 후 명시적으로 더미 기록 가져오기 |
-| [.env.example](.env.example) | 비밀값이 비어 있는 설정 예시 |
-| [requirements-dev.txt](requirements-dev.txt) | 설치 버전이 고정된 개발 의존성 |
-| [scripts/check_environment.py](scripts/check_environment.py) | 값을 출력하거나 외부 호출하지 않는 환경 점검 |
-| [docs/DATASET.md](docs/DATASET.md) | 데이터 필드·가상 패턴·분석 기준 설명 |
-| [data/work_records.json](data/work_records.json) | 8주 동안의 가상 작업 기록 150건 |
-| [data/dataset_metadata.json](data/dataset_metadata.json) | 가상 데이터 표시, 기간, 단위와 생성 조건 |
-| [data/summary.preview.json](data/summary.preview.json) | 현재 더미데이터를 분석한 예시 결과 |
-| [scripts/generate_dummy_data.py](scripts/generate_dummy_data.py) | 같은 데이터를 재생성하거나 원본 일치 여부 확인 |
-| [scripts/verify_dataset.py](scripts/verify_dataset.py) | 데이터와 통계·가상 패턴의 무결성 검증 |
+## 데이터가 답변에 쓰이는 흐름
 
-## 로컬 서버 실행
-
-웹 화면용 정적 서버는 별도 터미널에서 실행합니다.
-
-```powershell
-.\.venv\Scripts\python.exe -m http.server 5500 --bind 127.0.0.1 --directory frontend
+```mermaid
+flowchart LR
+    R["Firestore 작업 기록"] --> A["Python 시계열 분석"]
+    A --> S["Firestore 요약 저장"]
+    S --> P["시스템 프롬프트에 요약 주입"]
+    P --> G["질문·조건과 GPT 호출"]
+    G --> V["답변·계획 검증"]
+    V --> C["질문·답변 함께 저장"]
+    C --> W["웹 화면에 표시"]
 ```
 
-[김실장 웹 화면](http://127.0.0.1:5500)에 접속합니다. 아래 백엔드도 함께 실행돼 있어야 합니다.
+원본과 요약의 `data_revision`이 같으면 저장된 요약을 재사용합니다. 기록을 추가·수정·삭제하면 버전과 요약을 갱신하고 다음 상담에 최신 요약을 제공합니다. 과거 답변의 근거는 당시 버전으로 보존합니다.
 
-외부 프로젝트와 키가 없어도 서버·요청 검증·Swagger를 확인할 수 있습니다. 프로젝트 폴더에서 실행합니다.
+`POST /api/chat`은 요약 API와 **같은 요약 서비스를 직접 사용**합니다. 서버가 자기 API를 HTTP로 다시 호출하지 않습니다. 요약을 시스템 프롬프트의 `RECORD_SUMMARY`에 붙이고 질문·현재 조건·최근 대화를 전달합니다. 원본 메모 전체를 보내거나 모델을 재학습하지 않습니다.
+
+## 기술 스택과 역할 분리
+
+| 구성 | 사용 기술·책임 |
+| --- | --- |
+| 백엔드 | Python 3.12.14 검증, FastAPI·Uvicorn |
+| 요청·응답 모델 | Pydantic: 날짜·분 단위 정수·필수 필드·문자열 길이·작업 관계 검증 |
+| DB | Firebase Firestore: 기록·요약·대화 저장, 트랜잭션으로 변경 일관성 유지 |
+| AI | OpenAI Python SDK, 코디세이 제공 GPT API의 `gpt-5-mini`로 검증 |
+| 프론트엔드 | HTML/CSS/JavaScript, 프레임워크 미사용 |
+| 배포 | Render 백엔드 · Vercel 정적 프론트엔드 |
+
+```text
+main.py                  앱 진입점
+app/routers/             URL·HTTP 메서드·요청·응답 연결
+app/schemas/             Pydantic 검증과 데이터 형식
+app/services/            분석·요약·상담·저장 순서 등 업무 흐름
+app/repositories/        Firestore 읽기·쓰기와 트랜잭션
+app/core/                설정·외부 클라이언트·공통 오류
+frontend/                네 화면과 API 호출
+scripts/                 데이터 생성·검증·가져오기·프론트 빌드
+```
+
+Firestore의 `data`는 작업 기록, `conversations`는 상담과 메시지, `summaries`는 분석 요약, `metadata`는 버전·갱신 상태를 저장합니다. 라우터와 업무 흐름·DB 접근을 나눠 같은 요약을 화면과 채팅에서 재사용하고 외부 연결 없이 테스트할 수 있게 했습니다.
+
+## API
+
+| 메서드 | 주소 | 기능 |
+| --- | --- | --- |
+| POST / GET | `/api/data` | 기록 추가 / 목록 |
+| PUT / DELETE | `/api/data/{id}` | 기록 전체 수정 / 삭제 |
+| GET | `/api/data/summary` | 최신 요약 |
+| POST | `/api/chat` | GPT 상담과 질문·답변 자동 저장 |
+| POST / GET | `/api/conversations` | 상담 생성 / 목록 |
+| GET / DELETE | `/api/conversations/{id}` | 전체 메시지 불러오기 / 상담 삭제 |
+
+상세 메시지는 `GET /api/conversations/{id}`로 조회하는 방식(A)을 구현했습니다. 기록 삭제와 대화 삭제는 구분합니다. 성공한 삭제는 본문 없는 `204`입니다. 잘못된 입력은 `422`, 없는 ID는 `404`, 저장 충돌은 `409`, 호출 한도는 `429`로 안내합니다. [Swagger](https://m1-2-kim-manager.onrender.com/docs)와 [API 계약](docs/API_CONTRACT.md)에서 요청·응답 예시를 확인할 수 있습니다.
+
+## 새 컴퓨터에서 로컬 실행
+
+미션의 최소 조건은 Python 3.10 이상이며, 이 프로젝트는 **Python 3.12.14**에서 검증했습니다. 아래는 Windows PowerShell 기준입니다. Git과 Python을 준비하고 실행합니다.
+
+```powershell
+git clone https://github.com/Duebii/Codyssey.git
+cd Codyssey/M1-2
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+if (!(Test-Path .env)) { Copy-Item .env.example .env }
+```
+
+이미 저장소가 있다면 복제와 폴더 생성은 생략하고 `M1-2`에서 진행합니다. `.env`에 본인의 GPT 키와 Firestore 인증 정보를 입력합니다. 로컬 파일 방식은 `.secrets/firebase-service-account.json`에 본인 키를 보관하고 `FIREBASE_SERVICE_ACCOUNT_PATH`를 지정합니다. JSON 방식과 경로 방식을 동시에 설정하지 않습니다.
+
+새로 준비한 본인 Firestore에 기본 데이터를 넣으려면 먼저 검증한 뒤 명시적으로 저장합니다. 이미 준비된 공개 시연 DB에는 다시 가져올 필요가 없습니다.
+
+```powershell
+.\.venv\Scripts\python.exe scripts/import_dummy_data.py
+.\.venv\Scripts\python.exe scripts/import_dummy_data.py --apply
+```
+
+첫 명령은 외부 연결·쓰기 없이 검증만 합니다. `--apply`는 설정된 Firestore에 없는 ID만 추가하며 사용자 수정 기록을 덮어쓰지 않습니다.
+
+**터미널 1 · 백엔드**
 
 ```powershell
 .\.venv\Scripts\python.exe -m uvicorn main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-[Swagger UI](http://127.0.0.1:8000/docs), [서버 상태](http://127.0.0.1:8000/api/health), [데이터 요약 API](http://127.0.0.1:8000/api/data/summary), [대화 목록 API](http://127.0.0.1:8000/api/conversations)를 확인합니다. `AI_PROVIDER=codyssey`로 제공 키를 사용하며, 설정 예시는 현재 검증한 `gpt-5-mini`·출력 6000토큰·요청 60초 기준입니다. 자세한 상담·오류·제공자 선택 방법은 [상담 안내](docs/CHAT.md)를 따릅니다. 키·제공자·모델을 바꾼 뒤에는 서버를 재시작합니다.
-
-더미 기록을 가져오기 전에 외부 연결 없이 파일을 점검할 수 있습니다. 기본 실행은 데이터를 저장하지 않습니다.
+**터미널 2 · 프론트엔드** — 같은 `M1-2` 폴더에서 실행합니다.
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/import_dummy_data.py
+.\.venv\Scripts\python.exe -m http.server 5500 --bind 127.0.0.1 --directory frontend
 ```
 
-## 로컬 개발 환경 점검
+[로컬 웹](http://127.0.0.1:5500), [로컬 Swagger](http://127.0.0.1:8000/docs)를 엽니다. 키가 없어도 서버 기동·Swagger·오프라인 시험은 가능하지만 실제 CRUD·GPT 상담에는 해당 인증 설정이 필요합니다. 키·모델·제공자를 바꾸면 백엔드를 재시작합니다. macOS/Linux에서는 `python3 -m venv .venv`, `.venv/bin/python`을 사용합니다.
 
-이 컴퓨터의 `M1-2/.venv`에는 패키지 설치를 마쳤습니다. 아래 명령은 프로젝트 폴더에서 실행합니다.
+## 환경변수
+
+실제 값이 비어 있는 [.env.example](.env.example)을 기준으로 설정합니다. 로컬 `.env`보다 운영체제·플랫폼의 환경변수가 우선합니다.
+
+| 변수 | 용도·값 |
+| --- | --- |
+| `OPENAI_API_KEY` | 선택한 제공자의 비밀 키. 백엔드 전용 |
+| `FIREBASE_SERVICE_ACCOUNT_PATH` 또는 `FIREBASE_SERVICE_ACCOUNT_JSON` | 서비스 계정 파일 경로 또는 JSON 전체. 정확히 하나만 지정 |
+| `AI_PROVIDER` | 제공 키는 `codyssey`, 개인 OpenAI Platform 키는 `openai`. 발급처에 맞는 서버 선택 |
+| `OPENAI_MODEL` | 현재 코디세이 연결에서 `gpt-5-mini` 검증 |
+| `APP_ENV` | 로컬 `development`, Render `production` |
+| `ALLOWED_ORIGINS` | 로컬 `http://localhost:5500,http://127.0.0.1:5500`, 배포는 실제 Vercel HTTPS origin |
+| `API_BASE_URL` | 공개 백엔드 주소. 로컬 `http://127.0.0.1:8000`, Vercel은 실제 Render HTTPS 주소. `/api` 제외 |
+| `OPENAI_MAX_OUTPUT_TOKENS` | 예시 `6000`, 출력 상한 |
+| `OPENAI_TIMEOUT_SECONDS` / `OPENAI_REASONING_EFFORT` | 현재 제공자 검증값 `60` / `omit` |
+
+브라우저의 JavaScript는 플랫폼 환경변수를 직접 읽지 못하므로, Vercel 빌드가 공개 `API_BASE_URL`만 `dist/config.js`로 만듭니다. `--production` 빌드는 주소 누락·로컬 HTTP 주소·공개 대상 외 파일을 거절합니다. 배포 설정과 전체 환경변수는 [배포 안내](docs/DEPLOYMENT.md)를 따릅니다.
+
+## 검증과 운영 범위
+
+2026-10-27 **Python 221개·Node 14개** 시험을 통과했습니다. Firestore 실제 CRUD·요약 갱신, GPT 답변·시간 변경·자동 저장, 배포 웹의 새로고침 후 불러오기를 별도로 확인했습니다. 자동 시험은 외부 서비스를 호출하지 않으며 실제 GPT 답변 품질을 보장하는 시험은 아닙니다.
 
 ```powershell
-.\.venv\Scripts\python.exe scripts/check_environment.py --local-only
+.\.venv\Scripts\python.exe -m pytest --basetemp=.tmp/pytest-readme
+node --test tests/frontend.test.mjs
+.\.venv\Scripts\python.exe scripts/verify_dataset.py
+.\.venv\Scripts\python.exe scripts/generate_dummy_data.py --check
 ```
 
-전체 설정 점검은 `--local-only` 없이 실행합니다. 현재 컴퓨터에서는 전체 오프라인 점검을 통과했습니다. 이 점검만으로 OpenAI 호출 성공을 보장하지는 않습니다. 새 환경 설치와 외부 설정은 [환경 준비 안내](docs/SETUP.md)를 따릅니다.
+API 키와 서비스 계정 JSON은 Git에서 제외하고 Render 백엔드에만 둡니다. CORS는 허용한 웹 출처를 지정하는 브라우저 정책이며 로그인이나 데이터 접근 권한을 대신하지 않습니다. 현재 공개 API는 가상 데이터 시연용이고 사용자별 분리를 제공하지 않습니다. 실제 개인 업무 기록을 운영하기 전에는 인증·접근 제어를 추가해야 합니다.
 
-## 더미데이터 확인
+GPT 호출은 비용이 발생할 수 있어 출력·시간·입력 길이·요청 횟수를 제한했습니다. 네트워크 실패는 자동 재시도하지 않으며, 출력 형식·계획 보정은 최대 한 번 추가 호출할 수 있습니다. 최근 24시간 모델 호출 100회 제한은 서버 프로세스 기준으로 재시작 시 초기화됩니다. 기록된 시간이 줄었다고 효율이 높아졌다고 단정하지 않고, 자동화 절감 효과는 검증 전 가정으로 표시합니다.
 
-Python 3.10 이상에서 실행합니다. 외부 패키지나 API 키는 필요하지 않습니다. 아래 명령은 `M1-2` 폴더에서 실행합니다.
+## 제출·학습 자료
 
-```powershell
-python scripts/verify_dataset.py
-python scripts/generate_dummy_data.py --check
-```
+- [제출 요약과 확인 항목](docs/SUBMISSION.md)
+- [학습 목표 6가지 설명과 자가점검](docs/LEARNING_GUIDE.md)
+- [데이터 정의·생성·분석 기준](docs/DATASET.md)
+- [API·데이터 계약](docs/API_CONTRACT.md)
+- [환경 준비 상세](docs/SETUP.md), [배포 설정·검증](docs/DEPLOYMENT.md)
+- [전체 흐름 검증](docs/INTEGRATION.md), [개발 워크리스트](WORKLIST.md)
 
-원본 데이터를 다시 생성하려면 다음 명령을 실행합니다. `data/`의 세 JSON 파일이 같은 생성 조건으로 덮어써집니다.
-
-```powershell
-python scripts/generate_dummy_data.py
-```
-
-## 데이터 개요
-
-- 기간: **2026-08-26 ~ 2026-10-20**, 56일
-- 기록: 평일 40일에 걸친 작업 수행 **150건**
-- 분야: 프리랜서·취업·창업
-- `value`의 의미: 작업 한 건에 실제로 소요된 시간이라는 **가상 설정**, 단위는 분
-- 기록이 없는 16일: `unrecorded`로 표시하고 일별 합계는 `null`로 보관
-- 시간 기준: 한국 날짜, `Asia/Seoul`
-
-`summary.preview.json`은 시계열 분석을 설명하기 위한 고정된 로컬 예시입니다. 실제 최신 요약은 `/api/data/summary`에서 계산 대상 버전·생성 시각과 함께 조회합니다.
-
-## 기술 구성
-
-- 백엔드: Python · FastAPI · Pydantic
-- 저장소: Firebase Firestore
-- AI: OpenAI GPT API
-- 프론트엔드: HTML/CSS/JavaScript, 프레임워크 미사용
-- 배포: Render(백엔드) · Vercel(프론트엔드)
-
-현재 GitHub 업로드와 배포는 수행하지 않았습니다. 단계별 구현 범위는 [워크리스트](WORKLIST.md)를 따릅니다.
+로그인·사용자별 데이터 분리, 실제 작업 완료 추적, 전략 실행 결과 비교, 외부 도구 실행·Function Calling·MCP 연동은 후속 확장입니다. 실제 업무에서 계속 사용할 만큼 도움이 되는지는 실제 작업을 대상으로 입력 부담과 제안의 실행 가능성을 별도 평가해야 합니다.

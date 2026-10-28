@@ -1,8 +1,8 @@
-# 김실장 · 2단계 개발 환경과 설정 준비
+# 김실장 · 개발 환경과 인증 설정
 
 ## 현재 상태
 
-**로컬 환경과 Firebase 키 연결을 마쳤고, 더미데이터 150건 저장·실제 CRUD·중복 방지·서버 재시작 후 유지를 확인했습니다.**
+**로컬 환경·Firebase·코디세이 GPT 연결과 Render·Vercel 배포를 완료했습니다.** 아래에는 설정 방법과 단계별 검증 기록을 함께 남깁니다. 새 컴퓨터에서 시작하는 최소 순서는 [README](../README.md)를 먼저 따릅니다. 배포 검증 기준일은 2026-10-27이며 제출 문서는 2026-10-28 정리했습니다.
 
 | 항목 | 상태 | 확인 범위 |
 | --- | --- | --- |
@@ -12,13 +12,13 @@
 | pytest·httpx와 버전 목록 | 완료 | 테스트 실행, 의존성 충돌 점검 |
 | `.env.example`과 로컬 `.env` | 완료 | 예시는 비밀값이 비어 있음. 실제 `.env`와 `.secrets/`는 Git 제외 |
 | 설정 점검 도구 | 완료 | 잘못된 입력·키 비노출·환경변수 우선순위 검증 |
-| GitHub·Firebase·OpenAI API·Render·Vercel 계정 | 사용자 보유 확인 | 사용자가 계정 보유를 알려줌. 로그인 상태를 직접 점검한 것은 아님 |
+| GitHub·Firebase·Render·Vercel 계정 | 실제 연결·배포 확인 | GitHub 업로드, Firebase 저장, Render `Codyssey`·Vercel `HYO` 배포 확인. GPT는 코디세이 제공 키 사용 |
 | Firebase 프로젝트 | 생성 확인 | 2026-10-21 Firebase 콘솔에서 `M1-2 Mr kim` (`m1-2-mr-kim`) 확인 |
 | Firestore Database | 실제 저장·CRUD 확인 | `(default)`, `asia-northeast3`. 2026-10-21 작업 기록 150건·6,524분, 중복 방지·재시작 후 유지 확인 |
 | Firebase 서비스 계정 키 | 설정 완료 | 사용자 승인 후 발급한 파일을 `.secrets/firebase-service-account.json`에 보관하고 `.env`의 경로에 연결. 프로젝트·계정·서명 키와 실제 읽기 확인 |
 | GPT API 키(코디세이 제공) | 실제 인증·상담 성공 | 2026-10-22 코디세이 전용 서버의 `gpt-5-mini`로 실제 상담·자동 저장·재시작 후 유지 확인 |
 
-가상환경이나 패키지는 GitHub에 올리지 않습니다. 서버 기반과 Firestore CRUD·GPT를 실제로 검증했고 8단계 웹 화면까지 연결했습니다. 실행 방법과 결과는 [로컬 서버 안내](BACKEND_START.md), [Firestore 안내](FIRESTORE.md), [웹 화면 안내](FRONTEND.md)에 정리했습니다.
+가상환경이나 패키지는 GitHub에 올리지 않습니다. 서버 기반과 Firestore CRUD·GPT·배포 웹을 실제로 검증했습니다. 실행 방법과 결과는 [README](../README.md), [Firestore 안내](FIRESTORE.md), [웹 화면 안내](FRONTEND.md), [배포 안내](DEPLOYMENT.md)에 정리했습니다.
 
 ## 1. 로컬 환경 사용
 
@@ -36,7 +36,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 ```
 
-`.python-version`에는 이번에 검증한 Python 3.12.14를 기록했습니다. 이 파일 자체가 Python을 설치하거나 전환하지는 않습니다. 다른 Python 버전과 Render의 Linux 환경은 배포 단계에서 별도로 확인합니다.
+`.python-version`에는 검증한 Python 3.12.14를 기록했습니다. 이 파일 자체가 Python을 설치하거나 전환하지는 않습니다. Render의 Linux 환경에서도 같은 Python 버전으로 배포·실제 요청을 확인했습니다. 다른 Python 버전의 동작을 보장하는 것은 아닙니다.
 
 ### 의존성 파일
 
@@ -60,7 +60,7 @@ python -m venv .venv
 | `OPENAI_API_KEY` | 선택한 제공자의 GPT 호출 인증 | 코디세이 키 실제 인증·사용 확인. 비공개 `.env`에만 보관 |
 | `OPENAI_MODEL` 등 상담 설정 | 모델·출력 토큰·시간 제한 | 현재 `gpt-5-mini`, 6000토큰, 60초, 추론 옵션 `omit`. [전체 변수](CHAT.md) |
 | `FIREBASE_SERVICE_ACCOUNT_PATH` | 로컬 서비스 계정 JSON 파일 경로 | `.secrets/firebase-service-account.json` 설정 및 실제 읽기 확인 |
-| `FIREBASE_SERVICE_ACCOUNT_JSON` | 배포 등에서 JSON 전체를 환경변수로 제공 | 미입력. 로컬 파일 경로와 동시에 설정하지 않음 |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | 배포 등에서 JSON 전체를 환경변수로 제공 | 로컬은 비우고 Render에는 설정. 같은 환경에서 파일 경로와 동시에 설정하지 않음 |
 | `ALLOWED_ORIGINS` | API를 호출할 프론트엔드 출처 목록 | `http://localhost:5500,http://127.0.0.1:5500` |
 | `API_BASE_URL` | 프론트엔드가 사용할 공개 백엔드 주소 | 로컬 `http://127.0.0.1:8000`. 정적 화면에는 `config.js`로 반영. 서버는 별도 실행 |
 
@@ -72,7 +72,7 @@ python -m venv .venv
 2. 운영체제·배포 플랫폼의 환경변수가 있으면 `.env`보다 우선합니다. 명시적인 빈 값도 우선합니다.
 3. `.env` 문자열의 `${...}` 보간을 수행하지 않아 인증 문자열이 의도치 않게 바뀌지 않도록 합니다.
 4. 필수 항목 누락은 `MISSING`, 잘못된 형식은 `FAIL`로 표시합니다. 실제 키·JSON·파일 경로와 SDK 오류 전문은 출력하지 않습니다.
-5. 앱의 실제 설정 로더와 시작 시 오류 처리는 3단계에서 이 기준을 이어받아 구현합니다.
+5. 앱의 실제 설정 로더와 시작 시 오류 처리도 이 기준을 적용합니다.
 
 이 방식의 점검은 `scripts/check_environment.py`로 검증합니다. 서비스 계정은 JSON 구조와 서명 키 형식까지 로컬에서 파싱하지만, 계정이 실제로 존재하거나 접근 권한이 있다는 것을 보증하지 않습니다.
 
@@ -102,18 +102,17 @@ FIREBASE_SERVICE_ACCOUNT_JSON=
 
 웹 앱에 표시되는 Firebase 설정값과 서버의 서비스 계정 JSON은 서로 다릅니다. JSON 키는 브라우저·스크린샷·채팅·Git에 넣지 않습니다.
 
-## 4. 남은 외부 준비: OpenAI API
+## 4. GPT 제공자와 키 설정
 
-1. [OpenAI API 플랫폼](https://platform.openai.com/)에 로그인하고 김실장에 사용할 프로젝트를 준비합니다.
-2. 해당 프로젝트의 API 키를 발급합니다.
-3. 실제 값은 로컬 `.env`의 `OPENAI_API_KEY`에 입력합니다. 문서나 채팅에는 붙여넣지 않습니다.
-4. 키 유효성·API 사용 권한·이용 한도는 이후 실제 호출 단계에서 확인합니다. 이번 환경 점검은 요청을 보내거나 API 비용을 발생시키지 않습니다.
+현재 검증한 연결은 **코디세이 제공 키**입니다. `.env.example`의 `AI_PROVIDER=codyssey`, `OPENAI_MODEL=gpt-5-mini`, 출력 6000토큰·요청 60초·추론 옵션 `omit`을 사용하고, 발급받은 키를 로컬 `.env`의 `OPENAI_API_KEY`에 입력합니다. 전용 서버 주소는 제공자 어댑터가 선택하므로 코디세이 키를 개인 OpenAI 공식 서버로 보내지 않습니다.
+
+개인 OpenAI Platform 키를 사용할 때는 `AI_PROVIDER=openai`와 본인 계정에서 사용할 모델을 지정합니다. 제공자가 다르면 같은 문자열 형식의 키여도 인증에 실패할 수 있습니다. 실제 값은 문서나 채팅에 붙여넣지 않습니다. 오프라인 환경 점검은 실제 GPT 인증·모델 이용 가능 여부를 확인하지 않고 비용도 발생시키지 않습니다.
 
 OpenAI Docs는 Python SDK와 환경변수·`.env`를 통한 키 관리를 안내합니다. [공식 Python SDK 문서](https://developers.openai.com/api/reference/python)
 
 모델 선택과 응답 토큰·요청 제한은 [7단계 상담 안내](CHAT.md)에 정리했습니다. Render에는 백엔드 비밀값을 설정하고, Vercel에는 공개 `API_BASE_URL`만 전달합니다. 로컬 `.env` 전체를 프론트 설정으로 복사하지 않습니다.
 
-GitHub·Render·Vercel 계정은 보유 상태로 기록했습니다. 저장소 연결과 실제 서비스 생성·배포는 10단계에서 진행합니다.
+GitHub·Render·Vercel의 저장소 연결과 실제 서비스 생성·배포는 2026-10-27 확인했습니다. 주소와 환경변수는 [배포 안내](DEPLOYMENT.md)를 따릅니다.
 
 ## 5. 점검 명령과 결과 해석
 
@@ -149,7 +148,7 @@ New-Item -ItemType Directory -Path .tmp -Force | Out-Null
 
 테스트는 외부 서비스를 호출하지 않습니다. 환경변수 우선순위, 잘못된 주소·JSON·키, 비밀값 비노출, 임시 생성한 서명 키 파싱을 확인합니다. 임시 파일은 Git에서 제외된 `.tmp/` 안에만 둡니다. 위 테스트는 반드시 `M1-2` 폴더에서 실행합니다.
 
-## 6. 2단계 완료를 위한 남은 확인
+## 6. 설정 준비 완료 기록
 
 - [x] 로컬 개발 환경과 버전 목록 준비.
 - [x] 설정 예시·로컬 빈 설정·점검 도구·오류 안내 준비.
@@ -162,4 +161,4 @@ New-Item -ItemType Directory -Path .tmp -Force | Out-Null
 - [x] 코디세이 제공 키의 인증·GPT 모델·실제 사용 가능 여부 확인 (7단계 실제 호출).
 - [x] 전체 오프라인 설정 점검에서 미입력 항목 해소.
 
-설정 준비와 실제 외부 사용 확인을 마쳤습니다. [워크리스트](../WORKLIST.md)에 같은 상태를 반영합니다. Render·Vercel 프로젝트 생성과 배포는 10단계에서 진행합니다.
+설정 준비와 실제 외부 사용·배포 확인을 마쳤습니다. [워크리스트](../WORKLIST.md)에 상태를 기록하고, 현재 실행 방법과 제출 근거는 [README](../README.md)에 모았습니다.

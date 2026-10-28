@@ -1,4 +1,4 @@
-import { EMPTY_CONTEXT, MODES, number, minutes, dateTime, todayKST, contextPatch, rebaseContextDraft, validateContext, recordPayload, createApi, createDraftJournal, hasUnsentDraft } from './lib.js?v=20261028b';
+import { EMPTY_CONTEXT, MODES, number, minutes, dateTime, todayKST, contextPatch, rebaseContextDraft, validateContext, recordPayload, createApi, createDraftJournal, hasUnsentDraft } from './lib.js?v=20261028c';
 
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
@@ -308,9 +308,9 @@ async function loadConversation(id, { preserveInput = false, restore = false } =
     state.conversation = conversation; fillContext(conversation.context); $('#chat-mode').value = conversation.mode;
     if (preserveInput) { setContextForm(rebaseContextDraft(conversation.context, localPatch)); $('#chat-mode').value = localMode; }
     if (!preserveInput) { $('#chat-input').value = ''; clearFeedback($('#chat-error')); applyDraft(savedDraft, { rebase: true }); }
+    if (!restore) { location.hash = 'chat'; route(false); }
     $('#chat-subtitle').textContent = conversation.title; $('#save-state').textContent = '이전 상담에 저장됨'; if (preserveInput) clearFeedback($('#chat-error')); renderMessages({ scroll: true }); persistDraft();
     if (restore && Number.isFinite(savedDraft?.scrollTop)) $('#messages').scrollTop = savedDraft.scrollTop;
-    if (!restore) location.hash = 'chat';
     toast(preserveInput ? '최신 대화를 불러왔어요. 작성한 질문과 바꾼 조건은 그대로 남겨뒀어요.' : '이전 상담과 작성 중인 내용을 불러왔어요.');
   } catch (error) {
     if (restore) {
